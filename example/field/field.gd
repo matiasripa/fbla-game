@@ -6,6 +6,14 @@ extends MarginContainer
 @onready var card_drop_area_left: Area2D = $CardDropAreaLeft
 @onready var cards_holder: HBoxContainer = $CardsHolder
 
+var card = load("res://example/card/card.tscn")
+
+#this is the card values,add more interesting values
+#["description of the card",amount of turns,money,iron,reputation,C02]
+var card_positive = [["good status1",1,2,3,4,5],["goodstatus2",1,2,3,4,5],["goodstatus2",1,2,3,4,5]]
+var card_negative = [["bad status1",1,2,3,4,5],["bad status2",1,2,3,4,5],["bad status2",1,2,3,4,5]]
+var positiverand = 0
+var negativerand = 0
 
 func _ready():
 	$Label.text = name
@@ -48,3 +56,23 @@ func card_reposition(card: Card):
 
 	card.reparent(cards_holder)
 	cards_holder.move_child(card, index)
+
+
+func _on_button_pressed() -> void:
+	print("cards drawed")
+	var cardpos
+	var cardneg
+	cardvalueselector(cardpos,cardneg)
+	
+	cards_holder.add_child(card)
+
+	
+	
+	
+	
+
+func cardvalueselector(positive_value,negative_value):
+	positive_value = card_positive[randf_range(0,card_positive.size())]
+	negative_value = card_negative[randf_range(0,card_negative.size())]
+	print(positive_value)
+	print(negative_value)

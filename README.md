@@ -9,7 +9,7 @@ My experimental asset for **Godot 4.x** to add mechanics for transferring cards 
 While playing Hearthstone Battlegrounds, I noticed that the character affects the leftmost card in the hand, but it is impossible to change the location of cards in the hand, although it can be done on the field.
 
 I decided to implement the mechanics of moving cards in the hand, because in other card games like Magic: The Gathering or Hearthstone and in Godot Asset Store there is no such function. 
-
+ 
 As a result, it turned out to create not so much a "special hand" as a universal field with relocatable card mechanics.
 
 ## How It Works
@@ -25,11 +25,11 @@ The card has the following important elements:
 - DropPointDetector (Area2D) - responsible for defining the fields and their Area2Ds
 - CardsDetector (Area2D) - responsible for defining overlapping CardsDetectors of other cards
 - State Machine and the following states:
-    - Idle - idle state when no cursor is on the card
-    - Hover - the state when the cursor is hovered over the card
-    - Click - the state when the left mouse button is pressed and when the cursor is moved it switches to Drag state.
-    - Drag - state of moving the card. In this state, the card changes its parent to CanvasLayer to be above all cards and fields
-    - Release - the state that occurs when the card is released. In this state, the card checks its current location with DropPointDetector/CardsDetector and determines where to move the card depending on the result.
+	- Idle - idle state when no cursor is on the card
+	- Hover - the state when the cursor is hovered over the card
+	- Click - the state when the left mouse button is pressed and when the cursor is moved it switches to Drag state.
+	- Drag - state of moving the card. In this state, the card changes its parent to CanvasLayer to be above all cards and fields
+	- Release - the state that occurs when the card is released. In this state, the card checks its current location with DropPointDetector/CardsDetector and determines where to move the card depending on the result.
 
 ### Field
 A card has the following important elements:
@@ -39,9 +39,9 @@ A card has the following important elements:
 The field script has the following important functions:
 - return_card_starting_position() - the card returns to its field and to its original position
 - card_reposition() - the card takes the given position depending on its location on the field among other cards.
-    - If there are no cards, it becomes at the center of the field. (Possibly due to HBoxContainer alignment set to Center).
-    - If one card is already on the field (and it will always be at center), we check which of the CardDropAreaRight/CardDropAreaLeft is touched by the DropPointDetector and place it at the beginning/end of the row of cards.
-    - If a card touches 2 cards with CardsDetector, then we become in this field between them.
+	- If there are no cards, it becomes at the center of the field. (Possibly due to HBoxContainer alignment set to Center).
+	- If one card is already on the field (and it will always be at center), we check which of the CardDropAreaRight/CardDropAreaLeft is touched by the DropPointDetector and place it at the beginning/end of the row of cards.
+	- If a card touches 2 cards with CardsDetector, then we become in this field between them.
 - set_new_card() - the card remembers its new home field and takes the given position using card_reposition()
 
 ### Practice

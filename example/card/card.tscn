@@ -39,6 +39,21 @@ offset_right = 73.5
 offset_bottom = 23.0
 text = "Name"
 
+[node name="positive effect" type="Label" parent="."]
+layout_mode = 0
+offset_left = 7.535
+offset_top = 30.0
+offset_right = 93.535
+offset_bottom = 53.0
+text = "positive eff"
+
+[node name="negative effect" type="Label" parent="."]
+offset_left = 5.46
+offset_top = 84.14
+offset_right = 96.46
+offset_bottom = 107.14
+text = "negative eff"
+
 [node name="Label" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 7

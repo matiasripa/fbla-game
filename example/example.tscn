@@ -1,32 +1,36 @@
-[gd_scene load_steps=3 format=3 uid="uid://buh3412b0qtpp"]
+[gd_scene load_steps=4 format=3 uid="uid://buh3412b0qtpp"]
 
 [ext_resource type="PackedScene" uid="uid://biim2lxri0akl" path="res://example/field/field.tscn" id="1_fkhir"]
 [ext_resource type="PackedScene" uid="uid://3trgkf0u68ry" path="res://example/card/card.tscn" id="2_5f2as"]
+[ext_resource type="Script" path="res://example/drawcard.gd" id="3_aopf2"]
 
 [node name="Game" type="Node"]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." groups=["fields"]]
 
-[node name="Field1" parent="CanvasLayer" instance=ExtResource("1_fkhir")]
+[node name="hand" parent="CanvasLayer" instance=ExtResource("1_fkhir")]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -211.0
-offset_top = -573.0
-offset_right = 210.0
-offset_bottom = -423.0
+offset_left = -528.065
+offset_top = -266.175
+offset_right = -107.065
+offset_bottom = -116.175
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="Card" parent="CanvasLayer/Field1/CardsHolder" index="0" instance=ExtResource("2_5f2as")]
+[node name="Label" parent="CanvasLayer/hand" index="1"]
+text = "hand"
+
+[node name="Card" parent="CanvasLayer/hand/CardsHolder" index="0" instance=ExtResource("2_5f2as")]
 layout_mode = 2
 
-[node name="Card2" parent="CanvasLayer/Field1/CardsHolder" index="1" instance=ExtResource("2_5f2as")]
+[node name="Card2" parent="CanvasLayer/hand/CardsHolder" index="1" instance=ExtResource("2_5f2as")]
 layout_mode = 2
 
-[node name="Card3" parent="CanvasLayer/Field1/CardsHolder" index="2" instance=ExtResource("2_5f2as")]
+[node name="Card3" parent="CanvasLayer/hand/CardsHolder" index="2" instance=ExtResource("2_5f2as")]
 layout_mode = 2
 
 [node name="Field2" parent="CanvasLayer" instance=ExtResource("1_fkhir")]
@@ -35,11 +39,21 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -210.0
-offset_top = -267.0
-offset_right = 211.0
-offset_bottom = -117.0
+offset_left = -528.255
+offset_top = -518.0
+offset_right = -107.255
+offset_bottom = -368.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[editable path="CanvasLayer/Field1"]
+[node name="DrawCards" type="Button" parent="CanvasLayer"]
+offset_left = 538.0
+offset_top = 455.0
+offset_right = 624.0
+offset_bottom = 486.0
+text = "draw card"
+script = ExtResource("3_aopf2")
+
+[connection signal="pressed" from="CanvasLayer/DrawCards" to="CanvasLayer/hand" method="_on_button_pressed"]
+
+[editable path="CanvasLayer/hand"]

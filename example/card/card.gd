@@ -11,6 +11,8 @@ extends Control
 @onready var home_field: Field
 
 var index: int = 0
+var poseffect = []
+var negeffect = []
 
 
 func _ready():
