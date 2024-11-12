@@ -6,7 +6,7 @@ extends MarginContainer
 @onready var card_drop_area_left: Area2D = $CardDropAreaLeft
 @onready var cards_holder: HBoxContainer = $CardsHolder
 
-var card = load("res://example/card/card.tscn")
+var cardResource = preload("res://example/card/card.tscn")
 
 #this is the card values,add more interesting values
 #["description of the card",amount of turns,money,iron,reputation,C02]
@@ -64,6 +64,7 @@ func _on_button_pressed() -> void:
 	var cardneg
 	cardvalueselector(cardpos,cardneg)
 	
+	var card = cardResource.instantiate()
 	cards_holder.add_child(card)
 
 	

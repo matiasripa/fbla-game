@@ -48,6 +48,7 @@ offset_bottom = 53.0
 text = "positive eff"
 
 [node name="negative effect" type="Label" parent="."]
+layout_mode = 0
 offset_left = 5.46
 offset_top = 84.14
 offset_right = 96.46
