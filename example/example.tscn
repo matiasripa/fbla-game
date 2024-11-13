@@ -46,6 +46,12 @@ offset_bottom = -368.0
 grow_horizontal = 2
 grow_vertical = 0
 
+[node name="Field3" parent="CanvasLayer" instance=ExtResource("1_fkhir")]
+offset_left = 638.0
+offset_top = 125.0
+offset_right = 638.0
+offset_bottom = 125.0
+
 [node name="DrawCards" type="Button" parent="CanvasLayer"]
 offset_left = 538.0
 offset_top = 455.0

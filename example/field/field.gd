@@ -66,6 +66,7 @@ func _on_button_pressed() -> void:
 	
 	var card = cardResource.instantiate()
 	cards_holder.add_child(card)
+	set_new_card(card)
 
 	
 	
