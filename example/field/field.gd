@@ -5,7 +5,8 @@ extends MarginContainer
 @onready var card_drop_area_right: Area2D = $CardDropAreaRight
 @onready var card_drop_area_left: Area2D = $CardDropAreaLeft
 @onready var cards_holder: HBoxContainer = $CardsHolder
-
+@export var isasset: bool = false
+@export var iswithdraw:bool = false
 var cardResource = preload("res://example/card/card.tscn")
 
 #this is the card values,add more interesting values

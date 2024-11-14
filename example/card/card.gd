@@ -18,7 +18,8 @@ var negeffect = []
 
 func _ready():
 	name_label.text = name
-	home_field = $hand
+	home_field = $CardsHolder
+	
 
 
 func _input(event):
@@ -30,8 +31,12 @@ func _on_gui_input(event):
 
 
 func _on_mouse_entered():
-	if home_field.name != "Field3":
+	if !home_field.isasset && !home_field.iswithdraw:
 		state_machine.on_mouse_entered()
+	elif home_field.isasset:
+		pass
+	elif home_field.iswithdraw:
+		pass
 
 
 func _on_mouse_exited():
