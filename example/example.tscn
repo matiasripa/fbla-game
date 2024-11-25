@@ -25,13 +25,13 @@ grow_vertical = 0
 [node name="Label" parent="CanvasLayer/hand" index="1"]
 text = "hand"
 
-[node name="Card" parent="CanvasLayer/hand/CardsHolder" index="0" instance=ExtResource("2_5f2as")]
+[node name="Card2" parent="CanvasLayer/hand/CardsHolder" index="0" instance=ExtResource("2_5f2as")]
 layout_mode = 2
 
-[node name="Card2" parent="CanvasLayer/hand/CardsHolder" index="1" instance=ExtResource("2_5f2as")]
+[node name="Card3" parent="CanvasLayer/hand/CardsHolder" index="1" instance=ExtResource("2_5f2as")]
 layout_mode = 2
 
-[node name="Card3" parent="CanvasLayer/hand/CardsHolder" index="2" instance=ExtResource("2_5f2as")]
+[node name="Card" parent="CanvasLayer/hand/CardsHolder" index="2" instance=ExtResource("2_5f2as")]
 layout_mode = 2
 
 [node name="assets" parent="CanvasLayer" instance=ExtResource("1_fkhir")]
