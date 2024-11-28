@@ -4,6 +4,8 @@ extends MarginContainer
 @onready var card_drop_area_right: Area2D = $CardDropAreaRight
 @onready var card_drop_area_left: Area2D = $CardDropAreaLeft
 @onready var cards_holder: HBoxContainer = $CardsHolder
+
+
 @export var isasset: bool = false
 @export var iswithdraw: bool = false
 var cardResource = preload("res://example/card/card.tscn")
@@ -77,3 +79,18 @@ func cardvalueselector() -> Array:  # Ahmad: Changed the return type to Array fo
 	print(positive_value)  #  Print the selected positive value for debugging purposes.
 	print(negative_value)  #  Print the selected negative value for debugging purposes.
 	return [positive_value, negative_value]  # Return both values as an array to simplify value retrieval.
+
+func end_turn():
+	var active_cards = cards_holder.get_children()#gives array[node]
+	if active_cards.size() == 0:
+		print("nothing in "+ name)
+	for cards in active_cards:
+		print(cards.name)
+		if cards.has_method("turns"):
+			print("got turns")
+			cards.call("turns")
+
+func transfer(card):
+	print("transfer "+card.name)
+	return card
+	

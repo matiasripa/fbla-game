@@ -1,15 +1,18 @@
 [gd_scene load_steps=5 format=3 uid="uid://buh3412b0qtpp"]
 
 [ext_resource type="PackedScene" uid="uid://biim2lxri0akl" path="res://example/field/field.tscn" id="1_fkhir"]
-[ext_resource type="PackedScene" uid="uid://3trgkf0u68ry" path="res://example/card/card.tscn" id="2_5f2as"]
+[ext_resource type="Script" path="res://example/Signal_bus.gd" id="1_swl7a"]
 [ext_resource type="Script" path="res://example/drawcard.gd" id="3_aopf2"]
 [ext_resource type="Script" path="res://example/end_turn.gd" id="4_d401k"]
 
 [node name="Game" type="Node"]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." groups=["fields"]]
+[node name="Signalbus" type="Node" parent="."]
+script = ExtResource("1_swl7a")
 
-[node name="hand" parent="CanvasLayer" instance=ExtResource("1_fkhir")]
+[node name="CanvasLayer" type="CanvasLayer" parent="Signalbus" groups=["fields"]]
+
+[node name="hand" parent="Signalbus/CanvasLayer" instance=ExtResource("1_fkhir")]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -22,19 +25,10 @@ offset_bottom = -116.175
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="Label" parent="CanvasLayer/hand" index="1"]
+[node name="Label" parent="Signalbus/CanvasLayer/hand" index="1"]
 text = "hand"
 
-[node name="Card2" parent="CanvasLayer/hand/CardsHolder" index="0" instance=ExtResource("2_5f2as")]
-layout_mode = 2
-
-[node name="Card3" parent="CanvasLayer/hand/CardsHolder" index="1" instance=ExtResource("2_5f2as")]
-layout_mode = 2
-
-[node name="Card" parent="CanvasLayer/hand/CardsHolder" index="2" instance=ExtResource("2_5f2as")]
-layout_mode = 2
-
-[node name="assets" parent="CanvasLayer" instance=ExtResource("1_fkhir")]
+[node name="Assets" parent="Signalbus/CanvasLayer" instance=ExtResource("1_fkhir")]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -48,14 +42,14 @@ grow_horizontal = 2
 grow_vertical = 0
 isasset = true
 
-[node name="withdraw" parent="CanvasLayer" instance=ExtResource("1_fkhir")]
+[node name="Withdraw" parent="Signalbus/CanvasLayer" instance=ExtResource("1_fkhir")]
 offset_left = 50.0
 offset_top = 194.0
 offset_right = 50.0
 offset_bottom = 194.0
 iswithdraw = true
 
-[node name="DrawCards" type="Button" parent="CanvasLayer"]
+[node name="DrawCards" type="Button" parent="Signalbus/CanvasLayer"]
 offset_left = 538.0
 offset_top = 455.0
 offset_right = 624.0
@@ -63,7 +57,7 @@ offset_bottom = 486.0
 text = "Draw card"
 script = ExtResource("3_aopf2")
 
-[node name="end turn" type="Button" parent="CanvasLayer"]
+[node name="end turn" type="Button" parent="Signalbus/CanvasLayer"]
 offset_left = 539.0
 offset_top = 412.0
 offset_right = 623.0
@@ -71,7 +65,8 @@ offset_bottom = 443.0
 text = "End turn"
 script = ExtResource("4_d401k")
 
-[connection signal="pressed" from="CanvasLayer/DrawCards" to="CanvasLayer/hand" method="_on_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/end turn" to="CanvasLayer/end turn" method="_on_pressed"]
+[connection signal="pressed" from="Signalbus/CanvasLayer/DrawCards" to="Signalbus/CanvasLayer/hand" method="_on_button_pressed"]
+[connection signal="pressed" from="Signalbus/CanvasLayer/end turn" to="Signalbus" method="_on_end_turn_pressed"]
+[connection signal="pressed" from="Signalbus/CanvasLayer/end turn" to="Signalbus/CanvasLayer/end turn" method="_on_pressed"]
 
-[editable path="CanvasLayer/hand"]
+[editable path="Signalbus/CanvasLayer/hand"]

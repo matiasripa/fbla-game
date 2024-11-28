@@ -15,13 +15,14 @@ extends Control
 var index: int = 0  #  Index for identifying the card within a collection
 var poseffect = []  #  Array to store positive effects related to the card
 var negeffect = []  #  Array to store negative effects related to the card
-
+var turns_assets = 3
+var turns_withdraw = 3
 func _ready():
 	name_label.text = name  # Set the name label text to the card's name
 	
 	# Debugging: Print the parent and its children to verify the hierarchy
-	print("Parent Node:", get_parent().name)  #  Output the name of the parent node for debugging
-	print("Children of Parent:", get_parent().get_children())  #  Output the children of the parent node for debugging
+	#print("Parent Node:", get_parent().name)  #  Output the name of the parent node for debugging
+	#print("Children of Parent:", get_parent().get_children())  #  Output the children of the parent node for debugging
 	
 	# Attempt to find the CardsHolder node
 	home_field = get_parent()  # Ahmad: Assign the parent node (CardsHolder) to home_field
@@ -49,3 +50,17 @@ func _on_mouse_entered():
 
 func _on_mouse_exited():
 	state_machine.on_mouse_exited()  # Call the on_mouse_exited function in the state machine
+#func turns
+func turns():
+	print("turn affected in"+ name)
+	if home_field.name == "assets":
+		turns_assets -= 1
+		print(turns_assets)
+		if turns_assets == 0:
+			home_field.call("transfer",self)
+	else:
+		turns_withdraw -= 1
+		print(turns_withdraw)
+		if turns_withdraw == 0:
+			queue_free()
+		
