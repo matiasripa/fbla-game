@@ -63,6 +63,7 @@ offset_right = 92.0
 offset_bottom = 47.0
 text = "3 turns
 "
+horizontal_alignment = 1
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 1

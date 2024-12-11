@@ -14,15 +14,27 @@ extends Control
 
 # Variables for card properties
 var index: int = 0  #  Index for identifying the card within a collection
-
+var card_positive = [
+	["good status1", 1, 2, 3, 4, 5],
+	["good status2", 1, 3, 3, 4, 5],
+	["good status3", 1, 5, 3, 4, 5]
+]
+var card_negative = [
+	["bad status1", 1, 2, 3, 4, 5],
+	["bad status2", 1, 3, 3, 4, 5],
+	["bad status3", 1, 4, 3, 4, 5]
+]
 # Card values: [description of the card, amount of turns, money, iron, reputation, CO2]
 var poseffect = ["good status1", 1, 2, 3, 4, 5]  #  Array to store positive effects related to the card
 var negeffect = ["bad status1", 1, 2, 3, 4, 5]  #  Array to store negative effects related to the card
-var turns_assets = 101
-var turns_withdraw = 101
+var turn = -1
+
 func _ready():
+	poseffect = card_positive[randi() % card_positive.size()]
+	negeffect = card_negative[randi() % card_negative.size()]
+	turn = poseffect[2]
 	name_label.text = name  # Set the name label text to the card's name
-	
+	turn_label.text = str(turn) + " turn"
 	# Debugging: Print the parent and its children to verify the hierarchy
 	#print("Parent Node:", get_parent().name)  #  Output the name of the parent node for debugging
 	#print("Children of Parent:", get_parent().get_children())  #  Output the children of the parent node for debugging
@@ -55,17 +67,18 @@ func _on_mouse_exited():
 	state_machine.on_mouse_exited()  # Call the on_mouse_exited function in the state machine
 #func turns
 func turns():
-	if turns_assets > 99: turns_assets = poseffect[2]
-	if turns_withdraw > 99: turns_withdraw = negeffect[2]
+	if turn == -1: turn = poseffect[2]
+	
 	
 	if home_field.name == "assets":
-		turns_assets -= 1
-		print(turns_assets)
-		if turns_assets == 0:
+		turn -= 1
+		
+		print(turn)
+		if turn == 0:
 			home_field.call("transfer",self)
 	else:
-		turns_withdraw -= 1
-		print(turns_withdraw)
-		if turns_withdraw == 0:
+		turn -= 1
+		print(turn)
+		if turn == 0:
 			queue_free()
-		
+	turn_label.text = str(turn)+" turns"

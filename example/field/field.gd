@@ -11,16 +11,7 @@ extends MarginContainer
 var cardResource = preload("res://example/card/card.tscn")
 
 # Card values: [description of the card, amount of turns, money, iron, reputation, CO2]
-var card_positive = [
-	["good status1", 1, 2, 3, 4, 5],
-	["good status2", 1, 2, 3, 4, 5],
-	["good status3", 1, 2, 3, 4, 5]
-]
-var card_negative = [
-	["bad status1", 1, 2, 3, 4, 5],
-	["bad status2", 1, 2, 3, 4, 5],
-	["bad status3", 1, 2, 3, 4, 5]
-]
+
 
 func _ready():
 	$Label.text = name
@@ -62,23 +53,17 @@ func card_reposition(card: Card):
 func _on_button_pressed() -> void:
 	print("Cards drawn")
 	
-	var cardpos: Array = []  #  Initialize cardpos to store positive card values.
-	var cardneg: Array = []  #  Initialize cardneg to store negative card values.
 	
-	var selected_values = cardvalueselector()  #  Call the selector function to get random card values.
-	cardpos = selected_values[0]  #  Assign the first value (positive card) to cardpos.
-	cardneg = selected_values[1]  #  Assign the second value (negative card) to cardneg.
+	
+	
+	
+	
 	
 	var card = cardResource.instantiate()  # Ahmad: Create an instance of the card resource.
 	cards_holder.add_child(card)  # Ahmad: Add the new card instance to the cards holder.
 	set_new_card(card)  # Ahmad: Call set_new_card to reposition and set the home field for the new card.
 
-func cardvalueselector() -> Array:  # Ahmad: Changed the return type to Array for better data handling.
-	var positive_value = card_positive[randi() % card_positive.size()]  #  Randomly select a positive card value.
-	var negative_value = card_negative[randi() % card_negative.size()]  #  Randomly select a negative card value.
-	print(positive_value)  #  Print the selected positive value for debugging purposes.
-	print(negative_value)  #  Print the selected negative value for debugging purposes.
-	return [positive_value, negative_value]  # Return both values as an array to simplify value retrieval.
+
 
 func end_turn():
 	var active_cards = cards_holder.get_children()#gives array[node]
