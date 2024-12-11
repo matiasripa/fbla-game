@@ -5,6 +5,7 @@ extends Control
 @onready var color_rect: ColorRect = $ColorRect  #  Reference to the ColorRect node for visual representation
 @onready var label: Label = $Label  #  Reference to the Label node for displaying text
 @onready var name_label: Label = $NameLabel  #  Corrected from %NameLabel to $NameLabel for proper reference
+@onready var turn_label: Label = $turn_label  #  shows turns
 @onready var state_machine: CardStateMachine = $CardStateMachine  #  Reference to the state machine for handling card states
 @onready var drop_point_detector: Area2D = $DropPointDetector  #  Reference to the Area2D node for detecting drop points
 @onready var card_detector: Area2D = $CardsDetector  #  Reference to the Area2D node for detecting other cards
@@ -13,10 +14,12 @@ extends Control
 
 # Variables for card properties
 var index: int = 0  #  Index for identifying the card within a collection
-var poseffect = []  #  Array to store positive effects related to the card
-var negeffect = []  #  Array to store negative effects related to the card
-var turns_assets = 3
-var turns_withdraw = 3
+
+# Card values: [description of the card, amount of turns, money, iron, reputation, CO2]
+var poseffect = ["good status1", 1, 2, 3, 4, 5]  #  Array to store positive effects related to the card
+var negeffect = ["bad status1", 1, 2, 3, 4, 5]  #  Array to store negative effects related to the card
+var turns_assets = 101
+var turns_withdraw = 101
 func _ready():
 	name_label.text = name  # Set the name label text to the card's name
 	
@@ -52,7 +55,9 @@ func _on_mouse_exited():
 	state_machine.on_mouse_exited()  # Call the on_mouse_exited function in the state machine
 #func turns
 func turns():
-	print("turn affected in"+ name)
+	if turns_assets > 99: turns_assets = poseffect[2]
+	if turns_withdraw > 99: turns_withdraw = negeffect[2]
+	
 	if home_field.name == "assets":
 		turns_assets -= 1
 		print(turns_assets)

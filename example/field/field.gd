@@ -89,8 +89,8 @@ func end_turn():
 		if cards.has_method("turns"):
 			print("got turns")
 			cards.call("turns")
+			#
+			
 
-func transfer(card):
-	print("transfer "+card.name)
-	return card
+
 	

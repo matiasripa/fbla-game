@@ -18,10 +18,9 @@ func _process(delta: float) -> void:
 func _on_end_turn_pressed() -> void:
 	assets.end_turn()
 	withdraw.end_turn()
-func transfer():#transfers from asset to withdarw
-	
-	pass
+
 
 
 func _on_assets_transfer_card() -> void:
+	assets.transfer()
 	pass # Replace with function body.
