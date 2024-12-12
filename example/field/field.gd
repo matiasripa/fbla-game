@@ -9,7 +9,7 @@ extends MarginContainer
 @export var isasset: bool = false
 @export var iswithdraw: bool = false
 var cardResource = preload("res://example/card/card.tscn")
-
+signal transfercard(card)
 # Card values: [description of the card, amount of turns, money, iron, reputation, CO2]
 
 
@@ -75,7 +75,13 @@ func end_turn():
 			print("got turns")
 			cards.call("turns")
 			#
-			
+
+func transfer(card):
+	emit_signal("transfercard",card)
+	pass
+	
+	
+	
 
 
 	

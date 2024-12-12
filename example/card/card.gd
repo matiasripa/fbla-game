@@ -12,6 +12,7 @@ extends Control
 @onready var home_field: Node  #  Declare as Node; can be further specified if needed
 @onready var clickable = true  #  Boolean to indicate if the card can be clicked
 
+
 # Variables for card properties
 var index: int = 0  #  Index for identifying the card within a collection
 var card_positive = [
@@ -68,14 +69,16 @@ func _on_mouse_exited():
 #func turns
 func turns():
 	if turn == -1: turn = poseffect[2]
-	
-	
-	if home_field.name == "assets":
+	#if turn == -2:turn = negeffect[2]
+	print(home_field.name)
+	if home_field.name == "Assets":
 		turn -= 1
 		
 		print(turn)
 		if turn == 0:
 			home_field.call("transfer",self)
+			#turn = -2
+			turn = negeffect[2]
 	else:
 		turn -= 1
 		print(turn)
