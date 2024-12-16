@@ -6,11 +6,6 @@ extends Node
 
 
 
-
-
-
-
-
 func _on_end_turn_pressed() -> void:
 	assets.end_turn()
 	withdraw.end_turn()
