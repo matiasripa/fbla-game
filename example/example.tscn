@@ -79,6 +79,13 @@ offset_bottom = -205.0
 text = "End turn"
 script = ExtResource("4_d401k")
 
+[node name="Events" parent="Signalbus/CanvasLayer" instance=ExtResource("1_fkhir")]
+offset_left = 589.0
+offset_top = 21.0
+offset_right = 589.0
+offset_bottom = 21.0
+isevent = true
+
 [connection signal="transfercard" from="Signalbus/CanvasLayer/Assets" to="Signalbus" method="_on_assets_transfercard"]
 [connection signal="pressed" from="Signalbus/CanvasLayer/DrawCards" to="Signalbus/CanvasLayer/hand" method="_on_button_pressed"]
 [connection signal="pressed" from="Signalbus/CanvasLayer/end turn" to="Signalbus" method="_on_end_turn_pressed"]

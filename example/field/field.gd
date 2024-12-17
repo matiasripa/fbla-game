@@ -8,6 +8,7 @@ extends MarginContainer
 
 @export var isasset: bool = false
 @export var iswithdraw: bool = false
+@export var isevent: bool = false
 var cardResource = preload("res://example/card/card.tscn")
 signal transfercard(card)
 # Card values: [description of the card, amount of turns, money, iron, reputation, CO2]
