@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://buh3412b0qtpp"]
+[gd_scene load_steps=6 format=3 uid="uid://buh3412b0qtpp"]
 
 [ext_resource type="PackedScene" uid="uid://biim2lxri0akl" path="res://example/field/field.tscn" id="1_fkhir"]
 [ext_resource type="Script" path="res://example/Signal_bus.gd" id="1_swl7a"]
 [ext_resource type="Script" path="res://example/drawcard.gd" id="3_aopf2"]
 [ext_resource type="Script" path="res://example/end_turn.gd" id="4_d401k"]
+[ext_resource type="AudioStream" uid="uid://bijsesoyu6qwc" path="res://card sound draw.mp3" id="5_gfmt2"]
 
 [node name="Game" type="Node"]
 
@@ -85,6 +86,9 @@ offset_top = 21.0
 offset_right = 589.0
 offset_bottom = 21.0
 isevent = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Signalbus/CanvasLayer"]
+stream = ExtResource("5_gfmt2")
 
 [connection signal="transfercard" from="Signalbus/CanvasLayer/Assets" to="Signalbus" method="_on_assets_transfercard"]
 [connection signal="pressed" from="Signalbus/CanvasLayer/DrawCards" to="Signalbus/CanvasLayer/hand" method="_on_button_pressed"]

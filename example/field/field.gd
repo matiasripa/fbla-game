@@ -53,6 +53,7 @@ func card_reposition(card: Card):
 
 func _on_button_pressed() -> void:
 	print("Cards drawn")
+	$"../AudioStreamPlayer2D".play()
 	
 	
 	

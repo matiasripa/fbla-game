@@ -60,6 +60,7 @@ func _on_mouse_entered():
 	if !home_field.isasset && !home_field.iswithdraw:  # Ahmad: Check if home_field is not an asset or withdrawal
 		state_machine.on_mouse_entered()  # Call the on_mouse_entered function in the state machine
 		shadow_texture_rect.visible = true  # Show the shadow texture on hover
+		$AudioStreamPlayer2D.play()
 	elif home_field.isasset:
 		pass  # Do nothing if the home_field is an asset
 	elif home_field.iswithdraw:
