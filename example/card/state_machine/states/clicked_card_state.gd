@@ -2,7 +2,6 @@ extends CardState
 
 
 func _enter():
-	card.color_rect.color = Color.ORANGE
 	card.label.text = "CLICKED"
 
 

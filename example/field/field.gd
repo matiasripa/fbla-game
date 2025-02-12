@@ -53,7 +53,7 @@ func card_reposition(card: Card):
 
 func _on_button_pressed() -> void:
 	print("Cards drawn")
-	$"../AudioStreamPlayer2D".play()
+	$"../../../AudioStreamPlayer".play2()
 	
 	
 	
@@ -86,3 +86,7 @@ func transfer(card):
 
 
 	
+
+
+func _on_card_drop_area_left_area_entered(area: Area2D) -> void:
+	pass # Replace with function body.

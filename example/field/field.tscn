@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://biim2lxri0akl"]
+[gd_scene load_steps=4 format=3 uid="uid://biim2lxri0akl"]
 
 [ext_resource type="Script" path="res://example/field/field.gd" id="1_7p7dw"]
+[ext_resource type="Script" path="res://example/field/panel.gd" id="2_c68ge"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_crh71"]
 size = Vector2(210, 148)
@@ -15,10 +16,12 @@ metadata/_edit_use_anchors_ = true
 [node name="Panel" type="Panel" parent="."]
 modulate = Color(1, 1, 1, 0.278431)
 layout_mode = 2
+script = ExtResource("2_c68ge")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 2
-text = "Name"
+text = "destroy
+"
 
 [node name="CardsHolder" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -38,3 +41,6 @@ monitoring = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CardDropAreaLeft"]
 position = Vector2(106, 74)
 shape = SubResource("RectangleShape2D_crh71")
+
+[connection signal="area_entered" from="CardDropAreaRight" to="Panel" method="_on_card_drop_area_right_area_entered"]
+[connection signal="area_entered" from="CardDropAreaLeft" to="Panel" method="_on_card_drop_area_left_area_entered"]

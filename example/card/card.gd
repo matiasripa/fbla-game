@@ -2,7 +2,6 @@ class_name Card
 extends Control  
 
 # Declare onready variables for UI elements and components
-@onready var color_rect: ColorRect = $ColorRect  # Reference to the ColorRect node for visual representation
 @onready var label: Label = $Label  # Reference to the Label node for displaying text
 @onready var name_label: Label = $NameLabel  # Corrected from %NameLabel to $NameLabel for proper reference
 @onready var turn_label: Label = $turn_label  # Shows turns
@@ -11,8 +10,15 @@ extends Control
 @onready var card_detector: Area2D = $CardsDetector  # Reference to the Area2D node for detecting other cards
 @onready var home_field: Node  # Declare as Node; can be further specified if needed
 @onready var clickable = true  # Boolean to indicate if the card can be clicked
-@onready var shadow_texture_rect: TextureRect =  $ColorRect/TextureRect # Reference to the TextureRect for shadow
+@onready var shadow_texture_rect: TextureRect = $ColorRect/TextureRect # Reference to the TextureRect for shadow
+var tween_rot: Tween
+var tween_hover: Tween
+var tween_destroy: Tween
+var tween_handle: Tween
 
+
+@onready var card_texture: TextureRect = $ColorRect
+@onready var collision_shape = $destroy/CollisionShape2D
 # Variables for card properties
 var index: int = 0  # Index for identifying the card within a collection
 var card_positive = [
@@ -87,3 +93,19 @@ func turns():
 		if turn == 0:
 			queue_free()
 	turn_label.text = str(turn) + " turns"
+
+@onready var shader_material = card_texture.material
+
+func destroy() -> void:
+	card_texture.use_parent_material = false  # Changed to false to use its own material
+	if tween_destroy and tween_destroy.is_running():
+		tween_destroy.kill()
+	tween_destroy = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween_destroy.tween_property(shader_material, "shader_parameter/dissolve_value", 0.0, 2.0).from(1.0)
+	tween_destroy.parallel().tween_property(shadow_texture_rect, "self_modulate:a", 0.0, 1.0)
+	$"%NameLabel".text = " "
+	$"turn_label".text = " "
+	$positive_effect_label.text = " "
+	$negative_effect_label.text = " "
+	$Label.text = " "
+	tween_destroy.tween_callback(queue_free)

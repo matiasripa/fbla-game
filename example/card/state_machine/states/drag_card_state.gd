@@ -2,7 +2,6 @@ extends CardState
 
 
 func _enter():
-	card.color_rect.color = Color.BLUE
 	card.label.text = "DRAG"
 	
 	card.index = card.get_index()
