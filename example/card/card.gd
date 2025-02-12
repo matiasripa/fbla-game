@@ -10,12 +10,12 @@ extends Control
 @onready var card_detector: Area2D = $CardsDetector  # Reference to the Area2D node for detecting other cards
 @onready var home_field: Node  # Declare as Node; can be further specified if needed
 @onready var clickable = true  # Boolean to indicate if the card can be clicked
-@onready var shadow_texture_rect: TextureRect = $ColorRect/TextureRect # Reference to the TextureRect for shadow
+@onready var shadow_texture_rect: TextureRect =  $ColorRect/TextureRect # Reference to the TextureRect for shadow
 var tween_rot: Tween
 var tween_hover: Tween
 var tween_destroy: Tween
 var tween_handle: Tween
-
+var right_click_active: bool = false
 
 @onready var card_texture: TextureRect = $ColorRect
 @onready var collision_shape = $destroy/CollisionShape2D
@@ -46,6 +46,9 @@ func _ready():
 	# Initially hide the shadow texture
 	shadow_texture_rect.visible = false
 
+	# Add input handling for right click
+	gui_input.connect(_on_card_gui_input)
+
 	# Attempt to find the CardsHolder node
 	home_field = get_parent()  # Ahmad: Assign the parent node (CardsHolder) to home_field
 
@@ -55,12 +58,23 @@ func _ready():
 	else:
 		print("Successfully found CardsHolder:", home_field)
 
-func _input(event):
-	state_machine.on_input(event)  # Pass input events to the state machine for processing
+func _on_card_gui_input(event: InputEvent):
+	if event.is_action_pressed("mouse_right") and home_field.iswithdraw:
+		var signalbus = get_node("/root/Game/Signalbus")
+		if signalbus.is_player_turn and signalbus.actions_this_turn < signalbus.MAX_ACTIONS_PER_TURN:
+			turn -= 1
+			turn_label.text = str(turn) + " turns"
+			signalbus.track_action()
+			if turn <= 0:
+				queue_free()
+		elif signalbus.actions_this_turn >= signalbus.MAX_ACTIONS_PER_TURN:
+			print("No actions remaining this turn!")
+
 
 func _on_gui_input(event):
 	state_machine.on_gui_input(event)  # Pass GUI input events to the state machine for processing
-
+func _input(event):
+	state_machine.on_input(event) 
 func _on_mouse_entered():
 	# Handle mouse enter events
 	if !home_field.isasset && !home_field.iswithdraw:  # Ahmad: Check if home_field is not an asset or withdrawal
@@ -93,19 +107,18 @@ func turns():
 		if turn == 0:
 			queue_free()
 	turn_label.text = str(turn) + " turns"
-
 @onready var shader_material = card_texture.material
 
 func destroy() -> void:
 	card_texture.use_parent_material = false  # Changed to false to use its own material
 	if tween_destroy and tween_destroy.is_running():
 		tween_destroy.kill()
-	tween_destroy = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-	tween_destroy.tween_property(shader_material, "shader_parameter/dissolve_value", 0.0, 2.0).from(1.0)
-	tween_destroy.parallel().tween_property(shadow_texture_rect, "self_modulate:a", 0.0, 1.0)
-	$"%NameLabel".text = " "
+	%NameLabel.text = " "
 	$"turn_label".text = " "
 	$positive_effect_label.text = " "
 	$negative_effect_label.text = " "
 	$Label.text = " "
+	tween_destroy = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween_destroy.tween_property(shader_material, "shader_parameter/dissolve_value", 0.0, 2.0).from(1.0)
+	tween_destroy.parallel().tween_property(shadow_texture_rect, "self_modulate:a", 0.0, 1.0)
 	tween_destroy.tween_callback(queue_free)

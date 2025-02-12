@@ -49,10 +49,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = 15.0
-offset_top = -443.0
-offset_right = 436.0
-offset_bottom = -293.0
+offset_left = 85.0
+offset_top = -427.0
+offset_right = 506.0
+offset_bottom = -277.0
 grow_horizontal = 2
 grow_vertical = 0
 isasset = true
@@ -100,6 +100,13 @@ offset_top = 21.0
 offset_right = 589.0
 offset_bottom = 21.0
 isevent = true
+
+[node name="ActionLabel" type="Label" parent="Signalbus/CanvasLayer"]
+offset_left = 653.0
+offset_top = 461.0
+offset_right = 794.0
+offset_bottom = 484.0
+text = "Actions remaining: 2"
 
 [node name="AudioStreamPlayer" parent="." instance=ExtResource("5_akeb5")]
 

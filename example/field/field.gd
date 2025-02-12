@@ -52,21 +52,21 @@ func card_reposition(card: Card):
 	cards_holder.move_child(card, index)
 
 func _on_button_pressed() -> void:
+	# Check if we already have 5 cards in hand
+	if cards_holder.get_child_count() >= 5:
+		print("Hand is full! Maximum 5 cards allowed.")
+		return
+		
 	print("Cards drawn")
 	$"../../../AudioStreamPlayer".play2()
 	
+	var card = cardResource.instantiate()  
+	cards_holder.add_child(card)  
+	set_new_card(card)
 	
 	
 	
 	
-	
-	
-	var card = cardResource.instantiate()  # Ahmad: Create an instance of the card resource.
-	cards_holder.add_child(card)  # Ahmad: Add the new card instance to the cards holder.
-	set_new_card(card)  # Ahmad: Call set_new_card to reposition and set the home field for the new card.
-
-
-
 func end_turn():
 	var active_cards = cards_holder.get_children()#gives array[node]
 	if active_cards.size() == 0:
@@ -86,7 +86,3 @@ func transfer(card):
 
 
 	
-
-
-func _on_card_drop_area_left_area_entered(area: Area2D) -> void:
-	pass # Replace with function body.
