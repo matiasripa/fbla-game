@@ -108,6 +108,48 @@ offset_right = 794.0
 offset_bottom = 484.0
 text = "Actions remaining: 2"
 
+[node name="ResourcePanel" type="Panel" parent="Signalbus/CanvasLayer"]
+visible = false
+offset_left = 892.0
+offset_top = 466.0
+offset_right = 932.0
+offset_bottom = 506.0
+
+[node name="MoneyLabel" type="Label" parent="Signalbus/CanvasLayer"]
+offset_left = 970.0
+offset_top = 411.0
+offset_right = 1060.0
+offset_bottom = 434.0
+text = "Money"
+
+[node name="CO2Label" type="Label" parent="Signalbus/CanvasLayer"]
+offset_left = 973.0
+offset_top = 460.0
+offset_right = 1063.0
+offset_bottom = 483.0
+text = "co2"
+
+[node name="IronLabel" type="Label" parent="Signalbus/CanvasLayer"]
+offset_left = 980.0
+offset_top = 494.0
+offset_right = 1070.0
+offset_bottom = 517.0
+text = "iron "
+
+[node name="ReputationLabel" type="Label" parent="Signalbus/CanvasLayer"]
+offset_left = 965.0
+offset_top = 529.0
+offset_right = 1055.0
+offset_bottom = 552.0
+text = "ReputationLabel"
+
+[node name="TurnCounterLabel" type="Label" parent="Signalbus/CanvasLayer"]
+offset_left = 1032.0
+offset_top = 6.0
+offset_right = 1160.0
+offset_bottom = 29.0
+text = "count :"
+
 [node name="AudioStreamPlayer" parent="." instance=ExtResource("5_akeb5")]
 
 [connection signal="transfercard" from="Signalbus/CanvasLayer/Assets" to="Signalbus" method="_on_assets_transfercard"]

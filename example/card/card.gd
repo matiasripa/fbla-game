@@ -1,124 +1,188 @@
-class_name Card  
-extends Control  
+class_name Card
+extends Control
 
-# Declare onready variables for UI elements and components
-@onready var label: Label = $Label  # Reference to the Label node for displaying text
-@onready var name_label: Label = $NameLabel  # Corrected from %NameLabel to $NameLabel for proper reference
-@onready var turn_label: Label = $turn_label  # Shows turns
-@onready var state_machine: CardStateMachine = $CardStateMachine  # Reference to the state machine for handling card states
-@onready var drop_point_detector: Area2D = $DropPointDetector  # Reference to the Area2D node for detecting drop points
-@onready var card_detector: Area2D = $CardsDetector  # Reference to the Area2D node for detecting other cards
-@onready var home_field: Node  # Declare as Node; can be further specified if needed
-@onready var clickable = true  # Boolean to indicate if the card can be clicked
-@onready var shadow_texture_rect: TextureRect =  $ColorRect/TextureRect # Reference to the TextureRect for shadow
+@onready var label: Label = $Label
+@onready var name_label: Label = $NameLabel
+@onready var turn_label: Label = $turn_label
+@onready var positive_effect_label: Label = $positive_effect_label
+@onready var negative_effect_label: Label = $negative_effect_label
+@onready var state_machine: CardStateMachine = $CardStateMachine
+@onready var drop_point_detector: Area2D = $DropPointDetector
+@onready var card_detector: Area2D = $CardsDetector
+@onready var home_field: Node
+@onready var clickable = true
+@onready var shadow_texture_rect: TextureRect = $ColorRect/TextureRect
+@onready var card_texture: TextureRect = $ColorRect
+# Correct material references to use the card_texture's material
+@onready var shader_material = material
+@onready var dissolve_material = card_texture.material
+@onready var perspective_material = material
+
+@export var angle_x_max: float = 15.0
+@export var angle_y_max: float = 15.0
+@export var perspective_strength: float = 45.0
+
 var tween_rot: Tween
+var tween_move: Tween
 var tween_hover: Tween
 var tween_destroy: Tween
-var tween_handle: Tween
-var right_click_active: bool = false
+var perspective_tween: Tween
+var initial_rotation: float = 0.0
+var target_position: Vector2
+var follow_speed: float = 50.0
+var max_tilt_angle: float = 35.0
+var mouse_start_pos: Vector2
 
-@onready var card_texture: TextureRect = $ColorRect
-@onready var collision_shape = $destroy/CollisionShape2D
-# Variables for card properties
-var index: int = 0  # Index for identifying the card within a collection
+var right_click_active: bool = false
+var index: int = 0
+var is_positive_phase: bool = true
+var must_go_to_assets: bool = true
+
+var turn: int = -1
+
 var card_positive = [
-	["good status1", 1, 2, 3, 4, 5],
-	["good status2", 1, 3, 3, 4, 5],
-	["good status3", 1, 5, 3, 4, 5]
+	["Solar Plant", 2, 10, 0, 5, 0],
+	["Wind Farm", 2, 8, -5, 8, 0],
+	["Recycling Plant", 3, 5, 10, 3, -2]
 ]
+
 var card_negative = [
-	["bad status1", 1, 2, 3, 4, 5],
-	["bad status2", 1, 3, 3, 4, 5],
-	["bad status3", 1, 4, 3, 4, 5]
+	["Maintenance", 2, -5, -2, 0, 2],
+	["Public Protest", 1, -8, 0, -5, 0],
+	["Resource Shortage", 2, -3, -8, -2, 1]
 ]
-# Card values: [description of the card, amount of turns, money, iron, reputation, CO2]
-var poseffect = ["good status1", 1, 2, 3, 4, 5]  # Array to store positive effects related to the card
-var negeffect = ["bad status1", 1, 2, 3, 4, 5]  # Array to store negative effects related to the card
-var turn = -1
+
+var poseffect = ["good status1", 1, 2, 3, 4, 5]
+var negeffect = ["bad status1", 1, 2, 3, 4, 5]
+
 
 func _ready():
-	poseffect = card_positive[randi() % card_positive.size()]
-	negeffect = card_negative[randi() % card_negative.size()]
-	turn = poseffect[2]
-	name_label.text = name  # Set the name label text to the card's name
-	turn_label.text = str(turn) + " turn"
+	randomize()
 	
-	# Initially hide the shadow texture
-	shadow_texture_rect.visible = false
+	# Set random card effects
+	var pos_idx = randi() % card_positive.size()
+	var neg_idx = randi() % card_negative.size()
+	poseffect = card_positive[pos_idx]
+	negeffect = card_negative[neg_idx]
+	
+	# Update labels
+	name_label.text = poseffect[0]
+	turn = poseffect[1]
+	turn_label.text = str(turn) + " turns"
+	positive_effect_label.text = "+" + str(poseffect[2]) + "$ +" + str(poseffect[3]) + "Fe +" + str(poseffect[4]) + "Rep"
+	negative_effect_label.text = str(negeffect[2]) + "$ " + str(negeffect[3]) + "Fe " + str(negeffect[4]) + "Rep"
+	
+	# Make sure labels don't inherit the perspective material
+	name_label.use_parent_material = false
+	turn_label.use_parent_material = false
+	positive_effect_label.use_parent_material = false
+	negative_effect_label.use_parent_material = false
+	label.use_parent_material = false
 
-	# Add input handling for right click
-	gui_input.connect(_on_card_gui_input)
-
-	# Attempt to find the CardsHolder node
-	home_field = get_parent()  # Ahmad: Assign the parent node (CardsHolder) to home_field
-
-	# Check if home_field was set correctly
-	if home_field == null:
-		print("Error: CardsHolder node not found.")  # Print an error message if home_field is null
-	else:
-		print("Successfully found CardsHolder:", home_field)
-
-func _on_card_gui_input(event: InputEvent):
-	if event.is_action_pressed("mouse_right") and home_field.iswithdraw:
-		var signalbus = get_node("/root/Game/Signalbus")
-		if signalbus.is_player_turn and signalbus.actions_this_turn < signalbus.MAX_ACTIONS_PER_TURN:
-			turn -= 1
-			turn_label.text = str(turn) + " turns"
-			signalbus.track_action()
-			if turn <= 0:
-				queue_free()
-		elif signalbus.actions_this_turn >= signalbus.MAX_ACTIONS_PER_TURN:
-			print("No actions remaining this turn!")
-
+func _process(delta):
+	if state_machine.current_state.name == "Drag":
+		var target = get_global_mouse_position() - pivot_offset
+		var direction = target - global_position
+		global_position += direction * delta * follow_speed
+		
+		var mouse_movement = get_global_mouse_position() - mouse_start_pos
+		var tilt_angle = clamp(mouse_movement.x * 0.35, -max_tilt_angle, max_tilt_angle)
+		rotation_degrees = lerp(rotation_degrees, tilt_angle, delta * 25.0)
 
 func _on_gui_input(event):
-	state_machine.on_gui_input(event)  # Pass GUI input events to the state machine for processing
+	if event.is_action_pressed("mouse_left"):
+		mouse_start_pos = get_global_mouse_position()
+	state_machine.on_gui_input(event)
+	
+	if not event is InputEventMouseMotion: return
+	
+	var mouse_pos: Vector2 = get_local_mouse_position()
+	
+	var lerp_val_x: float = remap(mouse_pos.x, 0.0, size.x, 0, 1)
+	var lerp_val_y: float = remap(mouse_pos.y, 0.0, size.y, 0, 1)
+
+	var rot_x: float = rad_to_deg(lerp_angle(-angle_x_max, angle_x_max, lerp_val_x)) / 5
+	var rot_y: float = rad_to_deg(lerp_angle(angle_y_max, -angle_y_max, lerp_val_y)) / 5
+	shader_material.set_shader_parameter("fov", 90.0)
+	shader_material.set_shader_parameter("cull_back", false)
+	shader_material.set_shader_parameter("inset", 0.1)
+	shader_material.set_shader_parameter("y_rot", rot_x)
+	shader_material.set_shader_parameter("x_rot", rot_y)
+	
+	shader_material.set_shader_parameter("x_rot", shader_material.get_shader_parameter("x_rot") + 180.0)
+
 func _input(event):
-	state_machine.on_input(event) 
-func _on_mouse_entered():
-	# Handle mouse enter events
-	if !home_field.isasset && !home_field.iswithdraw:  # Ahmad: Check if home_field is not an asset or withdrawal
-		state_machine.on_mouse_entered()  # Call the on_mouse_entered function in the state machine
-		shadow_texture_rect.visible = true  # Show the shadow texture on hover
-		$AudioStreamPlayer2D.play()
-	elif home_field.isasset:
-		pass  # Do nothing if the home_field is an asset
-	elif home_field.iswithdraw:
-		pass  # Do nothing if the home_field is a withdrawal
-
-func _on_mouse_exited():
-	state_machine.on_mouse_exited()  # Call the on_mouse_exited function in the state machine
-	shadow_texture_rect.visible = false  # Hide the shadow texture when not hovering
-
-# Function to manage turns
-func turns():
-	if turn == -1: 
-		turn = poseffect[2]
-	print(home_field.name)
-	if home_field.name == "Assets":
-		turn -= 1
-		print(turn)
-		if turn == 0:
-			home_field.call("transfer", self)
-			turn = negeffect[2]
-	else:
-		turn -= 1
-		print(turn)
-		if turn == 0:
-			queue_free()
-	turn_label.text = str(turn) + " turns"
-@onready var shader_material = card_texture.material
+	state_machine.on_input(event)
 
 func destroy() -> void:
-	card_texture.use_parent_material = false  # Changed to false to use its own material
+	# Ensure we're using the dissolve material
+	card_texture.use_parent_material = false
 	if tween_destroy and tween_destroy.is_running():
 		tween_destroy.kill()
-	%NameLabel.text = " "
-	$"turn_label".text = " "
-	$positive_effect_label.text = " "
-	$negative_effect_label.text = " "
-	$Label.text = " "
+	
+	# Clear all labels
+	name_label.text = " "
+	turn_label.text = " "
+	positive_effect_label.text = " "
+	negative_effect_label.text = " "
+	label.text = " "
+	
 	tween_destroy = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-	tween_destroy.tween_property(shader_material, "shader_parameter/dissolve_value", 0.0, 2.0).from(1.0)
+	tween_destroy.tween_property(dissolve_material, "shader_parameter/dissolve_value", 1.0, 1.0).from(0.0)
 	tween_destroy.parallel().tween_property(shadow_texture_rect, "self_modulate:a", 0.0, 1.0)
 	tween_destroy.tween_callback(queue_free)
+
+func turns():
+	if home_field.name == "Assets" and is_positive_phase:
+		turn -= 1
+		print("Positive effect turn remaining: ", turn)
+		if turn <= 0:
+			is_positive_phase = false
+			turn = negeffect[1]
+			name_label.text = negeffect[0]  # Update name to negative effect
+			home_field.call("transfer", self)
+			turn_label.text = str(turn) + " turns"
+	elif home_field.name == "Withdraw":
+		turn -= 1
+		print("Negative effect turn remaining: ", turn)
+		if turn <= 0:
+			destroy()
+	
+	turn_label.text = str(turn) + " turns"
+
+func smooth_move_to(target: Vector2):
+	if tween_move:
+		tween_move.kill()
+	tween_move = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween_move.tween_property(self, "global_position", target, 0.8)
+	
+	if tween_rot:
+		tween_rot.kill()
+	tween_rot = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween_rot.tween_property(self, "rotation_degrees", 0, 0.3)
+
+func _on_mouse_entered():
+	if home_field:
+		# Only show hover effects for cards not in withdraw or assets fields
+		if !home_field.iswithdraw and !home_field.isasset:
+			state_machine.on_mouse_entered()
+			shadow_texture_rect.visible = true
+			
+			if tween_hover:
+				tween_hover.kill()
+			tween_hover = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+			tween_hover.tween_property(self, "scale", Vector2(1.2, 1.1), 0.2)
+			
+			$AudioStreamPlayer2D.play()
+		# For withdraw field, only show minimal hover effect for right-click functionality
+		elif home_field.iswithdraw:
+			state_machine.on_mouse_entered()
+			# No visual scaling or shadow effects for withdraw field
+func _on_mouse_exited():
+	state_machine.on_mouse_exited()
+	shadow_texture_rect.visible = false
+	
+	if tween_hover:
+		tween_hover.kill()
+	tween_hover = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween_hover.tween_property(self, "scale", Vector2(1, 1), 0.15)
