@@ -11,6 +11,8 @@ extends MarginContainer
 @export var isevent: bool = false
 var cardResource = preload("res://example/card/card.tscn")
 signal transfercard(card)
+signal eventcard(eventstate)
+var wichevent = 0
 # Card values: [description of the card, amount of turns, money, iron, reputation, CO2]
 
 
@@ -65,7 +67,8 @@ func _on_button_pressed() -> void:
 	set_new_card(card)
 	
 	
-	
+func event_setup():
+	pass
 	
 func end_turn():
 	var active_cards = cards_holder.get_children()#gives array[node]

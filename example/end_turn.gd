@@ -12,7 +12,7 @@ func _update_button_state() -> void:
 	var assets = get_node("../Assets")
 	var withdraw = get_node("../Withdraw")
 	
-	var valid_assets = false
+	var valid_assets = true # orignally false because it breaks if you destroy all cards in your hand
 	var valid_withdraw = false
 	
 	for card in assets.get_node("CardsHolder").get_children():

@@ -1,8 +1,8 @@
 [gd_scene load_steps=3 format=3 uid="uid://b0u4pf74opd1e"]
 
-[ext_resource type="AudioStream" uid="uid://bijsesoyu6qwc" path="res://card sound draw.mp3" id="1_vyywe"]
+[ext_resource type="AudioStream" uid="uid://c5kaogo8u3i6u" path="res://card sound drawfinal.wav" id="1_5tk22"]
 [ext_resource type="Script" path="res://example/audio_stream_player.gd" id="2_0cbem"]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer"]
-stream = ExtResource("1_vyywe")
+stream = ExtResource("1_5tk22")
 script = ExtResource("2_0cbem")

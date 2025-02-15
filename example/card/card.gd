@@ -37,9 +37,10 @@ var right_click_active: bool = false
 var index: int = 0
 var is_positive_phase: bool = true
 var must_go_to_assets: bool = true
-
+var if_event: bool = false
 var turn: int = -1
-
+var wichevent = 0
+#effect format: [description, turns, money, iron, reputation, co2]
 var card_positive = [
 	["Solar Plant", 2, 10, 0, 5, 0],
 	["Wind Farm", 2, 8, -5, 8, 0],
@@ -51,10 +52,23 @@ var card_negative = [
 	["Public Protest", 1, -8, 0, -5, 0],
 	["Resource Shortage", 2, -3, -8, -2, 1]
 ]
-
+#event you have to pay the price of the effect,last is lose description
+var cards_event = [
+	["globalwarming",-5,-5,-1,-10,5,"globalwarming"],
+	["public outrage",10,-5,0,-10,0,"destroyed your company"],
+	["bankruptcy",5,-10,0,0,0,"ran out of money"],
+	["iron shortage",5,-10,-1,-5,-2,"ran out of resources"]
+]
+var card_eventprice =[
+	["high CO2",0,-5,-1,-10,-40],
+	["public outrage",0,-5,0,-10,0],
+	["bankruptcy",0,-20,0,0,0],
+	["iron shortage",0,-5,-1,-5,-2],
+]
 var poseffect = ["good status1", 1, 2, 3, 4, 5]
 var negeffect = ["bad status1", 1, 2, 3, 4, 5]
-
+var eventeffect = ["event",1,2,3,4,5]
+var eventprice = ["price",1,2,3,4,5]
 
 func _ready():
 	randomize()
@@ -133,23 +147,28 @@ func destroy() -> void:
 	tween_destroy.tween_callback(queue_free)
 
 func turns():
-	if home_field.name == "Assets" and is_positive_phase:
-		turn -= 1
-		print("Positive effect turn remaining: ", turn)
-		if turn <= 0:
-			is_positive_phase = false
-			turn = negeffect[1]
-			name_label.text = negeffect[0]  # Update name to negative effect
-			home_field.call("transfer", self)
+	if(home_field.name != "Events"):
+		if home_field.name == "Assets" and is_positive_phase:
+			turn -= 1
+			print("Positive effect turn remaining: ", turn)
+			if turn <= 0:
+				is_positive_phase = false
+				turn = negeffect[1]
+				name_label.text = negeffect[0]  # Update name to negative effect
+				home_field.call("transfer", self)
+				turn_label.text = str(turn) + " turns"
+		elif home_field.name == "Withdraw":
+			turn -= 1
+			print("Negative effect turn remaining: ", turn)
+			if turn <= 0:
+				destroy()
+	
 			turn_label.text = str(turn) + " turns"
-	elif home_field.name == "Withdraw":
-		turn -= 1
-		print("Negative effect turn remaining: ", turn)
+	else:
+		turn -1
 		if turn <= 0:
 			destroy()
-	
-	turn_label.text = str(turn) + " turns"
-
+			
 func smooth_move_to(target: Vector2):
 	if tween_move:
 		tween_move.kill()

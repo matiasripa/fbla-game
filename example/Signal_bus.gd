@@ -1,6 +1,7 @@
 extends Node
 @onready var assets = $CanvasLayer/Assets
 @onready var withdraw = $CanvasLayer/Withdraw
+@onready var events = $CanvasLayer/Events
 @onready var action_label = $CanvasLayer/ActionLabel
 @onready var money_label = $CanvasLayer/MoneyLabel
 @onready var co2_label = $CanvasLayer/CO2Label
@@ -25,6 +26,13 @@ const WIN_MONEY_THRESHOLD = 100
 const WIN_REPUTATION_THRESHOLD = 75
 const LOSE_CO2_THRESHOLD = 100
 const WIN_IRON_THRESHOLD = 25
+#event threshold
+const LOW_MONEY = 10
+const LOW_REPUTATION = 10
+const HIGH_CO2 =70
+const LOW_IRON = 10
+var eventloss = false
+var event_loss_description = ""
 
 func _ready():
 	reset_turn()
@@ -78,6 +86,8 @@ func apply_card_effects(card, is_positive: bool):
 	iron += effect[3]
 	reputation += effect[4]
 	co2 += effect[5]
+	if co2 <= 0:
+		co2 = 0
 
 func check_game_conditions():
 	if current_turn > MAX_TURNS:
@@ -87,6 +97,12 @@ func check_game_conditions():
 			show_game_over("Game Over! Failed to achieve balance after 30 turns.")
 	elif co2 >= LOSE_CO2_THRESHOLD:
 		show_game_over("Game Over! CO2 levels too high!")
+	elif eventloss == true:
+		show_game_over(event_loss_description)
+	elif money <= LOW_MONEY:
+		
+		pass
+	
 
 func check_win_condition() -> bool:
 	return (money >= WIN_MONEY_THRESHOLD and 
@@ -125,3 +141,7 @@ func _on_end_turn_pressed() -> void:
 
 func _on_assets_transfercard(card: Variant) -> void:
 	withdraw.set_new_card(card)
+#event state goes through the list
+func _on_events_eventcard(eventstate: Variant) -> void:
+	events.wichevent = eventstate
+	events.set_new_card()

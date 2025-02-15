@@ -49,10 +49,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = 85.0
-offset_top = -427.0
-offset_right = 506.0
-offset_bottom = -277.0
+offset_left = 13.0
+offset_top = -428.0
+offset_right = 434.0
+offset_bottom = -278.0
 grow_horizontal = 2
 grow_vertical = 0
 isasset = true
@@ -144,10 +144,10 @@ offset_bottom = 552.0
 text = "ReputationLabel"
 
 [node name="TurnCounterLabel" type="Label" parent="Signalbus/CanvasLayer"]
-offset_left = 1032.0
-offset_top = 6.0
-offset_right = 1160.0
-offset_bottom = 29.0
+offset_left = 1016.0
+offset_top = 8.0
+offset_right = 1144.0
+offset_bottom = 31.0
 text = "count :"
 
 [node name="AudioStreamPlayer" parent="." instance=ExtResource("5_akeb5")]
@@ -157,5 +157,6 @@ text = "count :"
 [connection signal="pressed" from="Signalbus/CanvasLayer/DrawCards" to="Signalbus/CanvasLayer/hand" method="_on_button_pressed"]
 [connection signal="pressed" from="Signalbus/CanvasLayer/end turn" to="Signalbus" method="_on_end_turn_pressed"]
 [connection signal="pressed" from="Signalbus/CanvasLayer/end turn" to="Signalbus/CanvasLayer/end turn" method="_on_pressed"]
+[connection signal="eventcard" from="Signalbus/CanvasLayer/Events" to="Signalbus" method="_on_events_eventcard"]
 
 [editable path="Signalbus/CanvasLayer/hand"]
