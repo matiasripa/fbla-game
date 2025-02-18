@@ -80,7 +80,14 @@ func end_turn():
 			print("got turns")
 			cards.call("turns")
 
-func transfer(card):
+
+
+func transfer(card: Card):
+	# Ensure we're transferring the same card with its negative effects
+	if card.is_positive_phase:
+		card.is_positive_phase = false
+		card.turn = card.negeffect[1]  # Reset turn count to negative effect duration
+		card._update_labels()  # Update the card's display
 	emit_signal("transfercard",card)
 	pass
 	

@@ -70,28 +70,71 @@ var negeffect = ["bad status1", 1, 2, 3, 4, 5]
 var eventeffect = ["event",1,2,3,4,5]
 var eventprice = ["price",1,2,3,4,5]
 
+var card_pairs = [
+	{
+		"name": "Solar Plant",
+		"positive": [2, 10, 0, 5, 0],  # [turns, money, iron, reputation, co2]
+		"negative": [2, -5, 0, -3, 2]
+	},
+	{
+		"name": "Wind Farm",
+		"positive": [2, 8, -5, 8, 0],
+		"negative": [2, -4, -2, -4, 1]
+	},
+	{
+		"name": "Recycling Plant",
+		"positive": [3, 5, 10, 3, -2],
+		"negative": [3, -3, -5, -2, 1]
+	}
+]
+
+# Store the original card data for transfer
+var card_data = null
+
+
+
 func _ready():
 	randomize()
 	
-	# Set random card effects
-	var pos_idx = randi() % card_positive.size()
-	var neg_idx = randi() % card_negative.size()
-	poseffect = card_positive[pos_idx]
-	negeffect = card_negative[neg_idx]
+	# Select random card pair and store it
+	var pair_idx = randi() % card_pairs.size()
+	card_data = card_pairs[pair_idx]
 	
-	# Update labels
-	name_label.text = poseffect[0]
-	turn = poseffect[1]
+	# Set initial positive effects
+	name_label.text = card_data.name
+	turn = card_data.positive[0]
+	poseffect = [
+		card_data.name,
+		card_data.positive[0],  # turns
+		card_data.positive[1],  # money
+		card_data.positive[2],  # iron
+		card_data.positive[3],  # reputation
+		card_data.positive[4]   # co2
+	]
+	
+	# Set matching negative effects
+	negeffect = [
+		card_data.name,
+		card_data.negative[0],  # turns
+		card_data.negative[1],  # money
+		card_data.negative[2],  # iron
+		card_data.negative[3],  # reputation
+		card_data.negative[4]   # co2
+	]
+	
+	_update_labels()
+
+
+func _update_labels():
 	turn_label.text = str(turn) + " turns"
-	positive_effect_label.text = "+" + str(poseffect[2]) + "$ +" + str(poseffect[3]) + "Fe +" + str(poseffect[4]) + "Rep"
-	negative_effect_label.text = str(negeffect[2]) + "$ " + str(negeffect[3]) + "Fe " + str(negeffect[4]) + "Rep"
-	
-	# Make sure labels don't inherit the perspective material
-	name_label.use_parent_material = false
-	turn_label.use_parent_material = false
-	positive_effect_label.use_parent_material = false
-	negative_effect_label.use_parent_material = false
-	label.use_parent_material = false
+	if is_positive_phase:
+		positive_effect_label.text = "+" + str(poseffect[2]) + "$ +" + str(poseffect[3]) + "Fe +" + str(poseffect[4]) + "Rep"
+		negative_effect_label.text = str(negeffect[2]) + "$ " + str(negeffect[3]) + "Fe " + str(negeffect[4]) + "Rep"
+	else:
+		name_label.text = negeffect[0] + " (Maintenance)"
+		positive_effect_label.text = str(negeffect[2]) + "$ " + str(negeffect[3]) + "Fe " + str(negeffect[4]) + "Rep"
+		negative_effect_label.text = ""
+
 
 func _process(delta):
 	if state_machine.current_state.name == "Drag":
@@ -154,21 +197,19 @@ func turns():
 			if turn <= 0:
 				is_positive_phase = false
 				turn = negeffect[1]
-				name_label.text = negeffect[0]  # Update name to negative effect
+				_update_labels()
 				home_field.call("transfer", self)
-				turn_label.text = str(turn) + " turns"
 		elif home_field.name == "Withdraw":
 			turn -= 1
 			print("Negative effect turn remaining: ", turn)
 			if turn <= 0:
 				destroy()
-	
-			turn_label.text = str(turn) + " turns"
+		
+		turn_label.text = str(turn) + " turns"
 	else:
-		turn -1
+		turn -= 1
 		if turn <= 0:
 			destroy()
-			
 func smooth_move_to(target: Vector2):
 	if tween_move:
 		tween_move.kill()
