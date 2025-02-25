@@ -1,4 +1,6 @@
 extends Node
+
+# UI element references
 @onready var assets = $CanvasLayer/Assets
 @onready var withdraw = $CanvasLayer/Withdraw
 @onready var events = $CanvasLayer/Events
@@ -9,6 +11,7 @@ extends Node
 @onready var reputation_label = $CanvasLayer/ReputationLabel
 @onready var turn_counter_label = $CanvasLayer/TurnCounterLabel
 
+# Game state tracking
 var is_player_turn: bool = true
 var actions_this_turn: int = 0
 const MAX_ACTIONS_PER_TURN = 2
@@ -26,27 +29,32 @@ const WIN_MONEY_THRESHOLD = 100
 const WIN_REPUTATION_THRESHOLD = 75
 const LOSE_CO2_THRESHOLD = 100
 const WIN_IRON_THRESHOLD = 25
-#event threshold
+
+# Event thresholds
 const LOW_MONEY = 10
 const LOW_REPUTATION = 10
-const HIGH_CO2 =70
+const HIGH_CO2 = 70
 const LOW_IRON = 10
 var eventloss = false
 var event_loss_description = ""
 
+# Initialize game state
 func _ready():
 	reset_turn()
 	update_all_labels()
 
+# Reset turn state
 func reset_turn():
 	is_player_turn = true
 	actions_this_turn = 0
 	update_all_labels()
 	
+# Check if turn should end automatically
 func check_end_turn():
 	if actions_this_turn >= MAX_ACTIONS_PER_TURN:
 		pass # Remove auto end turn
 
+# Process end of turn
 func end_turn():
 	if is_player_turn:
 		# Process turn effects
@@ -64,6 +72,7 @@ func end_turn():
 		# Update UI
 		update_all_labels()
 
+# Process card effects at turn end
 func process_card_effects():
 	# Process effects from assets field
 	for card in assets.cards_holder.get_children():
@@ -79,6 +88,7 @@ func process_card_effects():
 	for field in [assets, withdraw]:
 		field.end_turn()
 
+# Apply card effects to game resources
 func apply_card_effects(card, is_positive: bool):
 	var effect = card.poseffect if is_positive else card.negeffect
 	# effect format: [description, turns, money, iron, reputation, co2]
@@ -89,6 +99,7 @@ func apply_card_effects(card, is_positive: bool):
 	if co2 <= 0:
 		co2 = 0
 
+# Check win/loss conditions
 func check_game_conditions():
 	if current_turn > MAX_TURNS:
 		if check_win_condition():
@@ -100,16 +111,16 @@ func check_game_conditions():
 	elif eventloss == true:
 		show_game_over(event_loss_description)
 	elif money <= LOW_MONEY:
-		
-		pass
-	
+		pass  # Event handling for low money
 
+# Check if win conditions are met
 func check_win_condition() -> bool:
 	return (money >= WIN_MONEY_THRESHOLD and 
 			reputation >= WIN_REPUTATION_THRESHOLD and 
 			co2 < LOSE_CO2_THRESHOLD and 
 			iron >= WIN_IRON_THRESHOLD)
 
+# Show game over dialog
 func show_game_over(message: String):
 	var game_over_dialog = AcceptDialog.new()
 	game_over_dialog.dialog_text = message
@@ -117,9 +128,11 @@ func show_game_over(message: String):
 	game_over_dialog.popup_centered()
 	game_over_dialog.connect("confirmed", _on_game_over_confirmed)
 
+# Handle game over dialog confirmation
 func _on_game_over_confirmed():
-	get_tree().reload_current_scene()
+	get_tree().reload_current_scene()  # Restart the game
 
+# Update all UI labels with current values
 func update_all_labels():
 	action_label.text = "Actions remaining: " + str(MAX_ACTIONS_PER_TURN - actions_this_turn)
 	money_label.text = "Money: " + str(money)
@@ -128,6 +141,7 @@ func update_all_labels():
 	reputation_label.text = "Reputation: " + str(reputation)
 	turn_counter_label.text = "Turn: " + str(current_turn) + "/" + str(MAX_TURNS)
 
+# Track action usage
 func track_action():
 	if is_player_turn and actions_this_turn < MAX_ACTIONS_PER_TURN:
 		actions_this_turn += 1
@@ -136,12 +150,15 @@ func track_action():
 	else:
 		print("No actions remaining this turn!")
 
+# End turn button handler
 func _on_end_turn_pressed() -> void:
 	end_turn()
 
+# Handle card transfer signal from assets
 func _on_assets_transfercard(card: Variant) -> void:
 	withdraw.set_new_card(card)
-#event state goes through the list
+
+# Handle event card signal
 func _on_events_eventcard(eventstate: Variant) -> void:
 	events.wichevent = eventstate
 	events.set_new_card()

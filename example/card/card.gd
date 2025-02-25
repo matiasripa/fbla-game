@@ -1,46 +1,52 @@
 class_name Card
 extends Control
 
+# UI elements references
 @onready var label: Label = $Label
 @onready var name_label: Label = $NameLabel
 @onready var turn_label: Label = $turn_label
 @onready var positive_effect_label: Label = $positive_effect_label
 @onready var negative_effect_label: Label = $negative_effect_label
 @onready var state_machine: CardStateMachine = $CardStateMachine
-@onready var drop_point_detector: Area2D = $DropPointDetector
-@onready var card_detector: Area2D = $CardsDetector
-@onready var home_field: Node
-@onready var clickable = true
-@onready var shadow_texture_rect: TextureRect = $ColorRect/TextureRect
-@onready var card_texture: TextureRect = $ColorRect
-# Correct material references to use the card_texture's material
+@onready var drop_point_detector: Area2D = $DropPointDetector  # Detects where card can be dropped
+@onready var card_detector: Area2D = $CardsDetector  # Detects other cards
+@onready var home_field: Node  # The field this card belongs to
+@onready var clickable = true  # If card can be clicked
+@onready var shadow_texture_rect: TextureRect = $ColorRect/TextureRect  # Shadow effect
+@onready var card_texture: TextureRect = $ColorRect  # Main card texture
+
+# Material references for visual effects
 @onready var shader_material = material
 @onready var dissolve_material = card_texture.material
 @onready var perspective_material = material
 
+# 3D perspective effect parameters
 @export var angle_x_max: float = 15.0
 @export var angle_y_max: float = 15.0
 @export var perspective_strength: float = 45.0
 
-var tween_rot: Tween
-var tween_move: Tween
-var tween_hover: Tween
-var tween_destroy: Tween
-var perspective_tween: Tween
+# Animation tweens
+var tween_rot: Tween  # For rotation animations
+var tween_move: Tween  # For movement animations
+var tween_hover: Tween  # For hover effects
+var tween_destroy: Tween  # For card destruction animation
+var perspective_tween: Tween  # For perspective effects
 var initial_rotation: float = 0.0
 var target_position: Vector2
-var follow_speed: float = 50.0
-var max_tilt_angle: float = 35.0
-var mouse_start_pos: Vector2
+var follow_speed: float = 50.0  # How fast card follows mouse
+var max_tilt_angle: float = 35.0  # Maximum tilt when dragging
+var mouse_start_pos: Vector2  # Starting position for mouse drag
 
+# Card state tracking
 var right_click_active: bool = false
 var index: int = 0
-var is_positive_phase: bool = true
+var is_positive_phase: bool = true  # Whether card is showing positive effects
 var must_go_to_assets: bool = true
 var if_event: bool = false
-var turn: int = -1
+var turn: int = -1  # Turns remaining for current effect
 var wichevent = 0
-#effect format: [description, turns, money, iron, reputation, co2]
+
+# Card effect data [description, turns, money, iron, reputation, co2]
 var card_positive = [
 	["Solar Plant", 2, 10, 0, 5, 0],
 	["Wind Farm", 2, 8, -5, 8, 0],
@@ -52,24 +58,29 @@ var card_negative = [
 	["Public Protest", 1, -8, 0, -5, 0],
 	["Resource Shortage", 2, -3, -8, -2, 1]
 ]
-#event you have to pay the price of the effect,last is lose description
+
+# Event cards and their effects
 var cards_event = [
 	["globalwarming",-5,-5,-1,-10,5,"globalwarming"],
 	["public outrage",10,-5,0,-10,0,"destroyed your company"],
 	["bankruptcy",5,-10,0,0,0,"ran out of money"],
 	["iron shortage",5,-10,-1,-5,-2,"ran out of resources"]
 ]
+
 var card_eventprice =[
 	["high CO2",0,-5,-1,-10,-40],
 	["public outrage",0,-5,0,-10,0],
 	["bankruptcy",0,-20,0,0,0],
 	["iron shortage",0,-5,-1,-5,-2],
 ]
+
+# Current card effect values
 var poseffect = ["good status1", 1, 2, 3, 4, 5]
 var negeffect = ["bad status1", 1, 2, 3, 4, 5]
 var eventeffect = ["event",1,2,3,4,5]
 var eventprice = ["price",1,2,3,4,5]
 
+# Card data definitions with paired positive and negative effects
 var card_pairs = [
 	{
 		"name": "Solar Plant",
@@ -87,11 +98,9 @@ var card_pairs = [
 		"negative": [3, -3, -5, -2, 1]
 	},
 	
-	
-	
 	{
 		"name": "Resource Shortage",
-		"positive": [0, 10, 0, 0, 0],  # [turns, money, iron, reputation, co2]
+		"positive": [1, 10, 0, 0, 0],  # [turns, money, iron, reputation, co2]
 		"negative": [3, -3, -5, -2, 0]  # [turns, money, iron, reputation, co2]
 	},
 	
@@ -100,13 +109,10 @@ var card_pairs = [
 		"positive": [1, 0, 0, 0, 0],  # [turns, money, iron, reputation, co2]
 		"negative": [2, 0, 0, -8, 5]  # [turns, money, iron, reputation, co2]
 	}
-	
 ]
 
 # Store the original card data for transfer
 var card_data = null
-
-
 
 func _ready():
 	randomize()
@@ -139,7 +145,7 @@ func _ready():
 	
 	_update_labels()
 
-
+# Updates card labels based on current state (positive or negative)
 func _update_labels():
 	turn_label.text = str(turn) + " turns"
 	if is_positive_phase:
@@ -150,7 +156,7 @@ func _update_labels():
 		positive_effect_label.text = str(negeffect[2]) + "$ " + str(negeffect[3]) + "Fe " + str(negeffect[4]) + "Rep"
 		negative_effect_label.text = ""
 
-
+# Move card with mouse when being dragged
 func _process(delta):
 	if state_machine.current_state.name == "Drag":
 		var target = get_global_mouse_position() - pivot_offset
@@ -161,6 +167,7 @@ func _process(delta):
 		var tilt_angle = clamp(mouse_movement.x * 0.35, -max_tilt_angle, max_tilt_angle)
 		rotation_degrees = lerp(rotation_degrees, tilt_angle, delta * 25.0)
 
+# Handle mouse input on the card
 func _on_gui_input(event):
 	if event.is_action_pressed("mouse_left"):
 		mouse_start_pos = get_global_mouse_position()
@@ -168,6 +175,7 @@ func _on_gui_input(event):
 	
 	if not event is InputEventMouseMotion: return
 	
+	# Calculate 3D perspective effect based on mouse position
 	var mouse_pos: Vector2 = get_local_mouse_position()
 	
 	var lerp_val_x: float = remap(mouse_pos.x, 0.0, size.x, 0, 1)
@@ -175,6 +183,8 @@ func _on_gui_input(event):
 
 	var rot_x: float = rad_to_deg(lerp_angle(-angle_x_max, angle_x_max, lerp_val_x)) / 5
 	var rot_y: float = rad_to_deg(lerp_angle(angle_y_max, -angle_y_max, lerp_val_y)) / 5
+	
+	# Apply 3D perspective shader parameters
 	shader_material.set_shader_parameter("fov", 90.0)
 	shader_material.set_shader_parameter("cull_back", false)
 	shader_material.set_shader_parameter("inset", 0.1)
@@ -183,9 +193,11 @@ func _on_gui_input(event):
 	
 	shader_material.set_shader_parameter("x_rot", shader_material.get_shader_parameter("x_rot") + 180.0)
 
+# Pass input events to state machine
 func _input(event):
 	state_machine.on_input(event)
 
+# Handle card destruction with dissolve animation
 func destroy() -> void:
 	# Ensure we're using the dissolve material
 	card_texture.use_parent_material = false
@@ -199,11 +211,13 @@ func destroy() -> void:
 	negative_effect_label.text = " "
 	label.text = " "
 	
+	# Animate dissolve effect
 	tween_destroy = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween_destroy.tween_property(dissolve_material, "shader_parameter/dissolve_value", 1.0, 1.0).from(0.0)
 	tween_destroy.parallel().tween_property(shadow_texture_rect, "self_modulate:a", 0.0, 1.0)
 	tween_destroy.tween_callback(queue_free)
 
+# Process turns for the card
 func turns():
 	if(home_field.name != "Events"):
 		if home_field.name == "Assets" and is_positive_phase:
@@ -225,6 +239,8 @@ func turns():
 		turn -= 1
 		if turn <= 0:
 			destroy()
+
+# Smoothly move card to target position
 func smooth_move_to(target: Vector2):
 	if tween_move:
 		tween_move.kill()
@@ -236,6 +252,7 @@ func smooth_move_to(target: Vector2):
 	tween_rot = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween_rot.tween_property(self, "rotation_degrees", 0, 0.3)
 
+# Mouse enter hover effect
 func _on_mouse_entered():
 	if home_field:
 		# Only show hover effects for cards not in withdraw or assets fields
@@ -252,7 +269,8 @@ func _on_mouse_entered():
 		# For withdraw field, only show minimal hover effect for right-click functionality
 		elif home_field.iswithdraw:
 			state_machine.on_mouse_entered()
-			# No visual scaling or shadow effects for withdraw field
+
+# Mouse exit effect
 func _on_mouse_exited():
 	state_machine.on_mouse_exited()
 	shadow_texture_rect.visible = false
