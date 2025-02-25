@@ -74,18 +74,33 @@ var card_pairs = [
 	{
 		"name": "Solar Plant",
 		"positive": [2, 10, 0, 5, 0],  # [turns, money, iron, reputation, co2]
-		"negative": [2, -5, 0, -3, 2]
+		"negative": [3, 0, 0, 0, 3]
 	},
 	{
 		"name": "Wind Farm",
-		"positive": [2, 8, -5, 8, 0],
-		"negative": [2, -4, -2, -4, 1]
+		"positive": [2, 8, -5, 8, 0], # [turns, money, iron, reputation, co2]
+		"negative": [2, -4, -2, -4, 1] # [turns, money, iron, reputation, co2]
 	},
 	{
 		"name": "Recycling Plant",
 		"positive": [3, 5, 10, 3, -2],
 		"negative": [3, -3, -5, -2, 1]
+	},
+	
+	
+	
+	{
+		"name": "Resource Shortage",
+		"positive": [0, 10, 0, 0, 0],  # [turns, money, iron, reputation, co2]
+		"negative": [3, -3, -5, -2, 0]  # [turns, money, iron, reputation, co2]
+	},
+	
+	{
+		"name": "Public Protest",
+		"positive": [1, 0, 0, 0, 0],  # [turns, money, iron, reputation, co2]
+		"negative": [2, 0, 0, -8, 5]  # [turns, money, iron, reputation, co2]
 	}
+	
 ]
 
 # Store the original card data for transfer
