@@ -60,6 +60,7 @@ texture = ExtResource("3_obxak")
 expand_mode = 1
 
 [node name="TextureRect" type="TextureRect" parent="ColorRect"]
+visible = false
 modulate = Color(0, 0, 0, 1)
 self_modulate = Color(0, 0, 0, 0.341176)
 show_behind_parent = true
@@ -72,6 +73,7 @@ texture = SubResource("ViewportTexture_6t2yu")
 expand_mode = 1
 
 [node name="positive_effect_label" type="Label" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 7.535
 offset_top = 46.705
@@ -80,6 +82,7 @@ offset_bottom = 69.705
 text = "positive eff"
 
 [node name="negative_effect_label" type="Label" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 5.46
 offset_top = 84.14
@@ -88,6 +91,7 @@ offset_bottom = 107.14
 text = "negative eff"
 
 [node name="turn_label" type="Label" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 13.0
 offset_top = 24.0

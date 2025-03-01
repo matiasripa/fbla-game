@@ -2,6 +2,11 @@ extends CardState
 
 func _enter():
 	card.label.text = "Release"
+	
+	# Ensure any zoom card is removed when releasing
+	if card.zoom_active:
+		card.remove_zoom_card()
+		
 	var field_areas = card.drop_point_detector.get_overlapping_areas()
 	
 	if field_areas.is_empty():

@@ -4,6 +4,10 @@ extends CardState
 func _enter():
 	card.label.text = "DRAG"
 	
+	# Make sure to remove any zoom card when entering drag state
+	if card.zoom_active:
+		card.remove_zoom_card()
+	
 	card.index = card.get_index()
 	
 	var canvas_layer := get_tree().get_first_node_in_group("fields")
