@@ -33,6 +33,8 @@ func return_card_starting_position(card: Card):
 func set_new_card(card: Card):
 	card_reposition(card)
 	card.home_field = self
+	if isevent == true:
+		card.wichevent = eventcard
 
 # Position card in the correct place based on neighboring cards
 func card_reposition(card: Card):
@@ -76,7 +78,10 @@ func _on_button_pressed() -> void:
 	
 # Setup event cards
 func event_setup():
-	pass
+	var card = cardResource.instantiate()  
+	cards_holder.add_child(card)  
+	set_new_card(card)
+
 	
 # Process turn end for all cards in this field
 func end_turn():

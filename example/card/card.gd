@@ -44,7 +44,8 @@ var is_positive_phase: bool = true  # Whether card is showing positive effects
 var must_go_to_assets: bool = true
 var if_event: bool = false
 var turn: int = -1  # Turns remaining for current effect
-var wichevent = 0
+var wichevent = -1
+var isevent = -1
 
 # Card effect data [description, turns, money, iron, reputation, co2]
 var card_positive = [
@@ -61,12 +62,23 @@ var card_negative = [
 
 # Event cards and their effects
 var cards_event = [
-	["globalwarming",-5,-5,-1,-10,5,"globalwarming"],
-	["public outrage",10,-5,0,-10,0,"destroyed your company"],
-	["bankruptcy",5,-10,0,0,0,"ran out of money"],
-	["iron shortage",5,-10,-1,-5,-2,"ran out of resources"]
+	{
+	"name" :"globalwarming",
+	"effect" :[5,-5,-1,-10,5]
+	}
+	,{
+		"name" :"high C02",
+		"effect" : [5,10,5,5,10,0]
+	},
+	{
+		"name" :"public outrage",
+		"effect" : [5,-10,0,0,0]
+	}
+
 ]
 
+#	["bankruptcy",5,-10,0,0,0,"ran out of money"],
+#	["iron shortage",5,-10,-1,-5,-2,"ran out of resources"]
 var card_eventprice =[
 	["high CO2",0,-5,-1,-10,-40],
 	["public outrage",0,-5,0,-10,0],
@@ -77,8 +89,9 @@ var card_eventprice =[
 # Current card effect values
 var poseffect = ["good status1", 1, 2, 3, 4, 5]
 var negeffect = ["bad status1", 1, 2, 3, 4, 5]
-var eventeffect = ["event",1,2,3,4,5]
-var eventprice = ["price",1,2,3,4,5]
+var eventeffect = ["event",1,2,3,4,5] 
+
+#var eventprice = ["price",1,2,3,4,5]#placeholder code,probably remove
 
 # Card data definitions with paired positive and negative effects
 var card_pairs = [
@@ -169,39 +182,50 @@ func remove_zoom_card():
 # Then modify the _ready function to handle the texture assignment
 func _ready():
 	randomize()
-	
-	# Select random card pair and store it
-	var pair_idx = randi() % card_pairs.size()
-	card_data = card_pairs[pair_idx]
-	
-	  # Add this line to ensure turn_label appears above other elements
-	turn_label.z_index = 1
+	if isevent == -1: #does not work ----------FIX---------------
+		# Select random card pair and store it
+		var pair_idx = randi() % card_pairs.size()
+		card_data = card_pairs[pair_idx]
 		
-	 # Make sure it's visible
-	turn_label.visible = true
-	
-	
-	# Set initial positive effects
-	name_label.text = card_data.name
-	turn = card_data.positive[0]
-	poseffect = [
-		card_data.name,
-		card_data.positive[0],  # turns
-		card_data.positive[1],  # money
-		card_data.positive[2],  # iron
-		card_data.positive[3],  # reputation
-		card_data.positive[4]   # co2
-	]
-	
-	# Set matching negative effects
-	negeffect = [
-		card_data.name,
-		card_data.negative[0],  # turns
-		card_data.negative[1],  # money
-		card_data.negative[2],  # iron
-		card_data.negative[3],  # reputation
-		card_data.negative[4]   # co2
-	]
+		  # Add this line to ensure turn_label appears above other elements
+		turn_label.z_index = 1
+			
+		 # Make sure it's visible
+		turn_label.visible = true
+		
+		
+		# Set initial positive effects
+		name_label.text = card_data.name
+
+		turn = card_data.positive[0]
+		poseffect = [
+			card_data.name,
+			card_data.positive[0],  # turns
+			card_data.positive[1],  # money
+			card_data.positive[2],  # iron
+			card_data.positive[3],  # reputation
+			card_data.positive[4]   # co2
+		]
+		
+		# Set matching negative effects
+		negeffect = [
+			card_data.name,
+			card_data.negative[0],  # turns
+			card_data.negative[1],  # money
+			card_data.negative[2],  # iron
+			card_data.negative[3],  # reputation
+			card_data.negative[4]   # co2
+		]
+	else: #does not work ----------FIX---------------
+		card_data = cards_event
+		eventeffect = [
+			card_data.name,
+			card_data.negative[0],  # turns
+			card_data.negative[1],  # money
+			card_data.negative[2],  # iron
+			card_data.negative[3],  # reputation
+			card_data.negative[4]   # co2
+		]
 	
 	# Set card texture based on card name
 	if card_textures.has(card_data.name):
@@ -322,6 +346,7 @@ func turns():
 		turn_label.text = str(turn) + ""
 	else:
 		turn -= 1
+		
 		if turn <= 0:
 			destroy()
 
@@ -348,7 +373,7 @@ func _on_mouse_entered():
 			create_zoom_card()
 		
 		# Only show hover effects for cards not in withdraw or assets fields
-		if !home_field.iswithdraw and !home_field.isasset:
+		if !home_field.iswithdraw and !home_field.isasset and !home_field.isevent:
 			state_machine.on_mouse_entered()
 			shadow_texture_rect.visible = true
 			

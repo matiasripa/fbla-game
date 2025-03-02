@@ -10,6 +10,7 @@ extends Node
 @onready var iron_label = $CanvasLayer/IronLabel
 @onready var reputation_label = $CanvasLayer/ReputationLabel
 @onready var turn_counter_label = $CanvasLayer/TurnCounterLabel
+var cardResource = preload("res://example/card/card.tscn")
 
 # Game state tracking
 var is_player_turn: bool = true
@@ -35,8 +36,11 @@ const LOW_MONEY = 10
 const LOW_REPUTATION = 10
 const HIGH_CO2 = 70
 const LOW_IRON = 10
-var eventloss = false
-var event_loss_description = ""
+#here are the different events,this is for text purposes
+var events_types = ["event1","event2","event3"]
+var which_event
+#-1 for unselected, 0 for no and 1 for yes
+var event_text_option_selected = -1 
 
 # Initialize game state
 func _ready():
@@ -71,26 +75,32 @@ func end_turn():
 		
 		# Update UI
 		update_all_labels()
+		if current_turn == 10:
+			which_event = randi() % events_types.size()
+			event_text("test",events_types[0])
+			
 
 # Process card effects at turn end
 func process_card_effects():
 	# Process effects from assets field
 	for card in assets.cards_holder.get_children():
 		if card.is_positive_phase:
-			apply_card_effects(card, true)
+			apply_card_effects(card, true, false)
 	
 	# Process effects from withdraw field
 	for card in withdraw.cards_holder.get_children():
 		if not card.is_positive_phase:
-			apply_card_effects(card, false)
-			
+			apply_card_effects(card, false, false)
+	for card in events.cards_holder.get_children():
+		apply_card_effects(card, false, true)
 	# Update cards in both fields
-	for field in [assets, withdraw]:
+	for field in [assets, withdraw,events]:
 		field.end_turn()
 
 # Apply card effects to game resources
-func apply_card_effects(card, is_positive: bool):
-	var effect = card.poseffect if is_positive else card.negeffect
+func apply_card_effects(card, is_positive: bool,is_event: bool):
+	var effect = card.poseffect if is_positive and !is_event else card.negeffect if !is_event else card.eventeffect
+
 	# effect format: [description, turns, money, iron, reputation, co2]
 	money += effect[2]
 	iron += effect[3]
@@ -108,8 +118,8 @@ func check_game_conditions():
 			show_game_over("Game Over! Failed to achieve balance after 30 turns.")
 	elif co2 >= LOSE_CO2_THRESHOLD:
 		show_game_over("Game Over! CO2 levels too high!")
-	elif eventloss == true:
-		show_game_over(event_loss_description)
+#	elif eventloss == true:
+#		show_game_over(event_loss_description)
 	elif money <= LOW_MONEY:
 		pass  # Event handling for low money
 
@@ -127,6 +137,24 @@ func show_game_over(message: String):
 	add_child(game_over_dialog)
 	game_over_dialog.popup_centered()
 	game_over_dialog.connect("confirmed", _on_game_over_confirmed)
+
+
+func event_text(messege: String,event : String):
+	var event_dialogue = AcceptDialog.new()
+	event_dialogue.dialog_text = messege
+	event_dialogue.add_cancel_button("no")
+	add_child(event_dialogue)
+	event_dialogue.popup_centered()
+	event_dialogue.connect("confirmed", on_event_accept)
+	event_dialogue.connect("canceled", on_event_decline)
+	
+	
+	
+func on_event_accept():
+	_on_events_eventcard(which_event,1) 
+
+func on_event_decline():
+	_on_events_eventcard(which_event,0)
 
 # Handle game over dialog confirmation
 func _on_game_over_confirmed():
@@ -159,6 +187,13 @@ func _on_assets_transfercard(card: Variant) -> void:
 	withdraw.set_new_card(card)
 
 # Handle event card signal
-func _on_events_eventcard(eventstate: Variant) -> void:
-	events.wichevent = eventstate
-	events.set_new_card()
+func _on_events_eventcard(eventstate: Variant,event_input : int) -> void:
+	if event_input == 1:
+		#gives the current event to the events field so it can assign to a card
+		eventstate = events.wichevent  
+		events.event_setup() #instantiates card
+	if event_input == 0:
+		pass
+		
+
+	
