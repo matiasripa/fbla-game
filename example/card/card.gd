@@ -85,37 +85,40 @@ var card_pairs = [
 	{
 		"name": "Solar Plant",
 		"positive": [2, 10, 0, 5, 0],  # [turns, money, iron, reputation, co2]
-		"negative": [4, 0, 0, 0, 3]
+		"negative": [4, 0, -10, 0, 3]
 	},
 	{
 		"name": "Wind Farm",
-		"positive": [2, 8, -5, 8, 0], # [turns, money, iron, reputation, co2]
-		"negative": [2, -4, -2, -4, 1] # [turns, money, iron, reputation, co2]
+		"positive": [2, 8, 0, 8, 0], # [turns, money, iron, reputation, co2]
+		"negative": [3, -4, -15, 0, 1] # [turns, money, iron, reputation, co2]
 	},
 	{
 		"name": "Recycling Plant",
-		"positive": [3, 5, 10, 3, -2],
-		"negative": [3, -3, -5, -2, 1]
+		"positive": [3, 10, 0, 10, -2],
+		"negative": [3, 0, -15, 0, 5]
 	},
 	
 	{
 		"name": "Resource Shortage",
 		"positive": [1, 10, 0, 0, 0],  # [turns, money, iron, reputation, co2]
-		"negative": [3, -3, -5, -2, 0]  # [turns, money, iron, reputation, co2]
+		"negative": [3, 0, -5, 0, 5]  # [turns, money, iron, reputation, co2]
 	},
 	
 	{
 		"name": "Public Protest",
-		"positive": [1, 0, 0, 0, 0],  # [turns, money, iron, reputation, co2]
-		"negative": [2, 0, 0, -8, 5]  # [turns, money, iron, reputation, co2]
+		"positive": [1, 0, 10, 0, 0],  # [turns, money, iron, reputation, co2]
+		"negative": [2, -15, 0, -20, 5]  # [turns, money, iron, reputation, co2]
 	}
 ]
 
 # Store the original card data for transfer
 var card_data = null
 var card_textures = {
-	"Solar Plant": preload("res://solar_plant_card.jpg"),
+	"Solar Plant": preload("res://solar plant.jpg"),
 	"Resource Shortage": preload("res://resource shortage.jpg"),
+	"Wind Farm": preload("res://wind farm.jpg"),
+	"Recycling Plant": preload("res://recycling plant.jpg"),
+	"Public Protest": preload("res://public protest.jpg"),
 	# You can add other card textures here as they become available
 }
 
@@ -146,7 +149,7 @@ func create_zoom_card():
 		var pos_effect_zoom = zoom_card.get_node("positive_effect_label")
 		var neg_effect_zoom = zoom_card.get_node("negative_effect_label")
 		
-		name_label_zoom.visible = true
+		turn_label_zoom.visible = true
 		
 		# Add to canvas layer for visibility
 		var canvas = get_node("/root/Game/Signalbus/CanvasLayer")
@@ -170,6 +173,13 @@ func _ready():
 	# Select random card pair and store it
 	var pair_idx = randi() % card_pairs.size()
 	card_data = card_pairs[pair_idx]
+	
+	  # Add this line to ensure turn_label appears above other elements
+	turn_label.z_index = 1
+		
+	 # Make sure it's visible
+	turn_label.visible = true
+	
 	
 	# Set initial positive effects
 	name_label.text = card_data.name
@@ -199,7 +209,7 @@ func _ready():
 	
 	# Make labels initially hidden on the regular card
 	name_label.visible = false
-	turn_label.visible = false
+	turn_label.visible = true
 	positive_effect_label.visible = false
 	negative_effect_label.visible = false
 	
@@ -209,7 +219,7 @@ func _ready():
 
 # Updates card labels based on current state (positive or negative)
 func _update_labels():
-	turn_label.text = str(turn) + " turns"
+	turn_label.text = str(turn) + ""
 	if is_positive_phase:
 		positive_effect_label.text = "+" + str(poseffect[2]) + "$ +" + str(poseffect[3]) + "Fe +" + str(poseffect[4]) + "Rep"
 		negative_effect_label.text = str(negeffect[2]) + "$ " + str(negeffect[3]) + "Fe " + str(negeffect[4]) + "Rep"
@@ -309,7 +319,7 @@ func turns():
 			if turn <= 0:
 				destroy()
 		
-		turn_label.text = str(turn) + " turns"
+		turn_label.text = str(turn) + ""
 	else:
 		turn -= 1
 		if turn <= 0:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://3trgkf0u68ry"]
+[gd_scene load_steps=18 format=3 uid="uid://3trgkf0u68ry"]
 
 [ext_resource type="Shader" path="res://example/card/card.gdshader" id="1_0tef8"]
 [ext_resource type="Shader" path="res://example/card/destroy.gdshader" id="1_f0hiy"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://example/card/state_machine/states/clicked_card_state.gd" id="4_2bop5"]
 [ext_resource type="Script" path="res://example/card/state_machine/states/drag_card_state.gd" id="5_f7w2d"]
 [ext_resource type="Script" path="res://example/card/state_machine/states/release_card_state.gd" id="6_r0y7t"]
+[ext_resource type="FontFile" uid="uid://bkgxbjbkij5j0" path="res://pixel font.ttf" id="6_wdugn"]
 [ext_resource type="Script" path="res://example/card/state_machine/states/hover_card_state.gd" id="7_xjssr"]
 [ext_resource type="AudioStream" uid="uid://c5kaogo8u3i6u" path="res://card sound drawfinal.wav" id="12_htq76"]
 
@@ -48,6 +49,7 @@ mouse_filter = 1
 script = ExtResource("1_gelhr")
 
 [node name="ColorRect" type="TextureRect" parent="."]
+show_behind_parent = true
 material = SubResource("ShaderMaterial_0ruxe")
 use_parent_material = true
 layout_mode = 1
@@ -91,15 +93,21 @@ offset_bottom = 107.14
 text = "negative eff"
 
 [node name="turn_label" type="Label" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 13.0
-offset_top = 24.0
-offset_right = 92.0
-offset_bottom = 47.0
-text = "3 turns
+clip_children = 2
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.2
+anchor_right = 0.5
+anchor_bottom = 0.2
+offset_left = -41.0
+offset_top = -24.0
+offset_right = 38.0
+theme_override_fonts/font = ExtResource("6_wdugn")
+theme_override_font_sizes/font_size = 13
+text = "3
 "
-horizontal_alignment = 1
+clip_text = true
 
 [node name="Label" type="Label" parent="."]
 visible = false
@@ -168,6 +176,7 @@ stream = ExtResource("12_htq76")
 
 [node name="NameLabel" type="Label" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 offset_left = 18.0
 offset_right = 65.0

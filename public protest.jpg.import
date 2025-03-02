@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dl08ewuwahdh5"
-path="res://.godot/imported/solar_plant_card.jpg-32a21f9992a3c89d1ecdf1cdb74874d4.ctex"
+uid="uid://gu3n31kni1y8"
+path="res://.godot/imported/public protest.jpg-836db20cebf9fcdc3444e0b49e6760f2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://solar_plant_card.jpg"
-dest_files=["res://.godot/imported/solar_plant_card.jpg-32a21f9992a3c89d1ecdf1cdb74874d4.ctex"]
+source_file="res://public protest.jpg"
+dest_files=["res://.godot/imported/public protest.jpg-836db20cebf9fcdc3444e0b49e6760f2.ctex"]
 
 [params]
 
