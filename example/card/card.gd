@@ -182,21 +182,45 @@ func remove_zoom_card():
 # Then modify the _ready function to handle the texture assignment
 func _ready():
 	randomize()
-	if isevent == -1: #does not work ----------FIX---------------
-		# Select random card pair and store it
+	
+	# Check if this is an event card
+	if if_event:
+		# Handle event card setup
+		name_label.text = cards_event[wichevent]["name"]
+		turn = cards_event[wichevent]["effect"][0]  # First element is turns
+		
+		# Set event effect
+		eventeffect = [
+			cards_event[wichevent]["name"],  # Name
+			cards_event[wichevent]["effect"][0],  # Turns
+			cards_event[wichevent]["effect"][1],  # Money
+			cards_event[wichevent]["effect"][2],  # Iron
+			cards_event[wichevent]["effect"][3],  # Reputation
+			cards_event[wichevent]["effect"][4]   # CO2
+		]
+		
+		# Update labels for event card
+		turn_label.text = str(turn) + ""
+		positive_effect_label.text = "Effect: " + str(eventeffect[2]) + "$ " + str(eventeffect[3]) + "Fe " + str(eventeffect[4]) + "Rep"
+		negative_effect_label.text = ""
+		
+		# Set card data for reference
+		card_data = {
+			"name": cards_event[wichevent]["name"]
+		}
+	else:
+		# Regular card setup (your existing code)
 		var pair_idx = randi() % card_pairs.size()
 		card_data = card_pairs[pair_idx]
 		
-		  # Add this line to ensure turn_label appears above other elements
+		# Add this line to ensure turn_label appears above other elements
 		turn_label.z_index = 1
 			
-		 # Make sure it's visible
+		# Make sure it's visible
 		turn_label.visible = true
-		
 		
 		# Set initial positive effects
 		name_label.text = card_data.name
-
 		turn = card_data.positive[0]
 		poseffect = [
 			card_data.name,
@@ -216,19 +240,9 @@ func _ready():
 			card_data.negative[3],  # reputation
 			card_data.negative[4]   # co2
 		]
-	else: #does not work ----------FIX---------------
-		card_data = cards_event
-		eventeffect = [
-			card_data.name,
-			card_data.negative[0],  # turns
-			card_data.negative[1],  # money
-			card_data.negative[2],  # iron
-			card_data.negative[3],  # reputation
-			card_data.negative[4]   # co2
-		]
 	
 	# Set card texture based on card name
-	if card_textures.has(card_data.name):
+	if card_data.name and card_textures.has(card_data.name):
 		card_texture.texture = card_textures[card_data.name]
 	
 	# Make labels initially hidden on the regular card
@@ -328,7 +342,13 @@ func destroy() -> void:
 
 # Process turns for the card
 func turns():
-	if(home_field.name != "Events"):
+	if if_event:
+		# Event card logic
+		turn -= 1
+		print("Event card turn remaining: ", turn)
+		if turn <= 0:
+			destroy()
+	elif home_field.name != "Events":
 		if home_field.name == "Assets" and is_positive_phase:
 			turn -= 1
 			print("Positive effect turn remaining: ", turn)
@@ -343,12 +363,8 @@ func turns():
 			if turn <= 0:
 				destroy()
 		
-		turn_label.text = str(turn) + ""
-	else:
-		turn -= 1
-		
-		if turn <= 0:
-			destroy()
+	turn_label.text = str(turn) + ""
+
 
 # Smoothly move card to target position
 func smooth_move_to(target: Vector2):

@@ -62,7 +62,6 @@ texture = ExtResource("3_obxak")
 expand_mode = 1
 
 [node name="TextureRect" type="TextureRect" parent="ColorRect"]
-visible = false
 modulate = Color(0, 0, 0, 1)
 self_modulate = Color(0, 0, 0, 0.341176)
 show_behind_parent = true

@@ -98,16 +98,24 @@ func process_card_effects():
 		field.end_turn()
 
 # Apply card effects to game resources
-func apply_card_effects(card, is_positive: bool,is_event: bool):
-	var effect = card.poseffect if is_positive and !is_event else card.negeffect if !is_event else card.eventeffect
+func apply_card_effects(card, is_positive: bool, is_event: bool):
+	var effect
+	
+	if is_event:
+		effect = card.eventeffect
+	elif is_positive:
+		effect = card.poseffect
+	else:
+		effect = card.negeffect
 
-	# effect format: [description, turns, money, iron, reputation, co2]
+	# Effect format: [description, turns, money, iron, reputation, co2]
 	money += effect[2]
 	iron += effect[3]
 	reputation += effect[4]
 	co2 += effect[5]
 	if co2 <= 0:
 		co2 = 0
+
 
 # Check win/loss conditions
 func check_game_conditions():
@@ -187,13 +195,14 @@ func _on_assets_transfercard(card: Variant) -> void:
 	withdraw.set_new_card(card)
 
 # Handle event card signal
-func _on_events_eventcard(eventstate: Variant,event_input : int) -> void:
-	if event_input == 1:
-		#gives the current event to the events field so it can assign to a card
-		eventstate = events.wichevent  
-		events.event_setup() #instantiates card
-	if event_input == 0:
+func _on_events_eventcard(eventstate: Variant, event_input: int) -> void:
+	if event_input == 1:  # User accepted the event
+		# Set the current event type in the events field
+		events.wichevent = which_event  
+		events.event_setup()  # Create the event card
+	elif event_input == 0:  # User declined the event
+		# Handle declined event (maybe apply a different penalty?)
 		pass
-		
+
 
 	

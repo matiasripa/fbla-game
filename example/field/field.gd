@@ -78,8 +78,10 @@ func _on_button_pressed() -> void:
 	
 # Setup event cards
 func event_setup():
-	var card = cardResource.instantiate()  
-	cards_holder.add_child(card)  
+	var card = cardResource.instantiate()
+	card.if_event = true  # Mark this as an event card
+	card.wichevent = wichevent  # Set which event this is
+	cards_holder.add_child(card)
 	set_new_card(card)
 
 	

@@ -11,7 +11,7 @@ func on_gui_input(event: InputEvent):
 			if signalbus.is_player_turn and signalbus.actions_this_turn < signalbus.MAX_ACTIONS_PER_TURN:
 				signalbus.track_action()
 				card.turn -= 1
-				card.turn_label.text = str(card.turn) + " turns"
+				card.turn_label.text = str(card.turn) + ""
 				if card.turn <= 0:
 					card.destroy()
 	# For other fields (not withdraw or assets), allow left-click to pick up
