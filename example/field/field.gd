@@ -77,13 +77,22 @@ func _on_button_pressed() -> void:
 	set_new_card(card)
 	
 # Setup event cards
+# Setup event cards
 func event_setup():
 	var card = cardResource.instantiate()
 	card.if_event = true  # Mark this as an event card
 	card.wichevent = wichevent  # Set which event this is
 	cards_holder.add_child(card)
+	
+	# Set the home_field before calling set_new_card to ensure proper shadow handling
+	card.home_field = self
+	
+	# Now call set_new_card which will position the card correctly
 	set_new_card(card)
-
+	
+	# Explicitly hide the shadow for event cards in event field
+	if isevent:
+		card.get_node("ColorRect/TextureRect").visible = false
 	
 # Process turn end for all cards in this field
 func end_turn():

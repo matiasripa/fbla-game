@@ -47,51 +47,31 @@ var turn: int = -1  # Turns remaining for current effect
 var wichevent = -1
 var isevent = -1
 
-# Card effect data [description, turns, money, iron, reputation, co2]
-var card_positive = [
-	["Solar Plant", 2, 10, 0, 5, 0],
-	["Wind Farm", 2, 8, -5, 8, 0],
-	["Recycling Plant", 3, 5, 10, 3, -2]
-]
-
-var card_negative = [
-	["Maintenance", 2, -5, -2, 0, 2],
-	["Public Protest", 1, -8, 0, -5, 0],
-	["Resource Shortage", 2, -3, -8, -2, 1]
-]
 
 # Event cards and their effects
 var cards_event = [
 	{
-	"name" :"globalwarming",
-	"effect" :[5,-5,-1,-10,5]
-	}
-	,{
-		"name" :"high C02",
-		"effect" : [5,10,5,5,10,0]
+		"name": "Acid Rain",
+		"effect": [2, 0, -10, -20, 15]# [turns, money, iron, reputation, co2]
 	},
 	{
-		"name" :"public outrage",
-		"effect" : [5,-10,0,0,0]
+		"name": "Bad product",
+		"effect": [3, -10, -10, -7, 0]
+	},
+	{
+		"name": "deforestation",
+		"effect": [1, -6, 0, -6, 8]
 	}
-
 ]
 
-#	["bankruptcy",5,-10,0,0,0,"ran out of money"],
-#	["iron shortage",5,-10,-1,-5,-2,"ran out of resources"]
-var card_eventprice =[
-	["high CO2",0,-5,-1,-10,-40],
-	["public outrage",0,-5,0,-10,0],
-	["bankruptcy",0,-20,0,0,0],
-	["iron shortage",0,-5,-1,-5,-2],
-]
+
 
 # Current card effect values
 var poseffect = ["good status1", 1, 2, 3, 4, 5]
 var negeffect = ["bad status1", 1, 2, 3, 4, 5]
 var eventeffect = ["event",1,2,3,4,5] 
 
-#var eventprice = ["price",1,2,3,4,5]#placeholder code,probably remove
+
 
 # Card data definitions with paired positive and negative effects
 var card_pairs = [
@@ -132,6 +112,10 @@ var card_textures = {
 	"Wind Farm": preload("res://wind farm.jpg"),
 	"Recycling Plant": preload("res://recycling plant.jpg"),
 	"Public Protest": preload("res://public protest.jpg"),
+	
+	"Acid Rain": preload("res://acid rain.jpg"),
+	"Bad product": preload("res://bad product.jpg"),
+	"deforestation": preload("res://deforestation.jpg"),
 	# You can add other card textures here as they become available
 }
 
@@ -143,8 +127,8 @@ var zoom_position: Vector2 = Vector2(800, 100)  # Position on right side of scre
 
 # Add this method to create the zoomed card
 func create_zoom_card():
-	# Only create zoom card if we're in the hand field
-	if home_field and home_field.name == "hand" and !zoom_active and state_machine.current_state.name != "Drag":
+	# Allow zoom for cards in both hand and event fields
+	if home_field and (home_field.name == "hand" || home_field.name == "Events") and !zoom_active and state_machine.current_state.name != "Drag":
 		# Create a duplicate of this card for zooming
 		zoom_card = duplicate()
 		
@@ -162,13 +146,22 @@ func create_zoom_card():
 		var pos_effect_zoom = zoom_card.get_node("positive_effect_label")
 		var neg_effect_zoom = zoom_card.get_node("negative_effect_label")
 		
+		# Make labels visible on zoomed card
+		name_label_zoom.visible = false
 		turn_label_zoom.visible = true
+		
+		# Show appropriate effect labels based on card type
+		if if_event:
+			pos_effect_zoom.visible = false
+			neg_effect_zoom.visible = false
+		else:
+			pos_effect_zoom.visible = false
+			neg_effect_zoom.visible = false
 		
 		# Add to canvas layer for visibility
 		var canvas = get_node("/root/Game/Signalbus/CanvasLayer")
 		canvas.add_child(zoom_card)
 		zoom_active = true
-
 
 
 
@@ -179,13 +172,15 @@ func remove_zoom_card():
 		zoom_card = null
 		zoom_active = false
 
+static var last_card_name: String = ""  # Static variable to track the last card drawn
+
 # Then modify the _ready function to handle the texture assignment
 func _ready():
 	randomize()
 	
 	# Check if this is an event card
 	if if_event:
-		# Handle event card setup
+		# Handle event card setup (same as before)
 		name_label.text = cards_event[wichevent]["name"]
 		turn = cards_event[wichevent]["effect"][0]  # First element is turns
 		
@@ -201,22 +196,35 @@ func _ready():
 		
 		# Update labels for event card
 		turn_label.text = str(turn) + ""
-		positive_effect_label.text = "Effect: " + str(eventeffect[2]) + "$ " + str(eventeffect[3]) + "Fe " + str(eventeffect[4]) + "Rep"
-		negative_effect_label.text = ""
 		
 		# Set card data for reference
 		card_data = {
 			"name": cards_event[wichevent]["name"]
 		}
+		
+		# Update last card name for event cards too
+		Card.last_card_name = card_data.name
+		
+		# If card is in event field, hide shadow
+		if home_field and home_field.isevent:
+			shadow_texture_rect.visible = false
 	else:
-		# Regular card setup (your existing code)
+		# Modified card selection logic to prevent duplicates
 		var pair_idx = randi() % card_pairs.size()
 		card_data = card_pairs[pair_idx]
 		
-		# Add this line to ensure turn_label appears above other elements
+		# If we've drawn the same card as last time and there are other options available
+		if Card.last_card_name == card_data.name and card_pairs.size() > 1:
+			# Keep selecting a different card until we find one different from the last
+			while Card.last_card_name == card_data.name:
+				pair_idx = randi() % card_pairs.size()
+				card_data = card_pairs[pair_idx]
+		
+		# Store this card's name for next time
+		Card.last_card_name = card_data.name
+		
+		# Rest of your existing code remains unchanged
 		turn_label.z_index = 1
-			
-		# Make sure it's visible
 		turn_label.visible = true
 		
 		# Set initial positive effects
@@ -241,17 +249,17 @@ func _ready():
 			card_data.negative[4]   # co2
 		]
 	
-	# Set card texture based on card name
+	# Set card texture based on card name (same as before)
 	if card_data.name and card_textures.has(card_data.name):
 		card_texture.texture = card_textures[card_data.name]
 	
-	# Make labels initially hidden on the regular card
+	# Make labels initially hidden on the regular card (same as before)
 	name_label.visible = false
 	turn_label.visible = true
 	positive_effect_label.visible = false
 	negative_effect_label.visible = false
 	
-	# Update all labels with current values
+	# Update all labels with current values (same as before)
 	_update_labels()
 
 
@@ -366,39 +374,29 @@ func turns():
 	turn_label.text = str(turn) + ""
 
 
-# Smoothly move card to target position
-func smooth_move_to(target: Vector2):
-	# Remove zoom when card is moved
-	remove_zoom_card()
-	
-	if tween_move:
-		tween_move.kill()
-	tween_move = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tween_move.tween_property(self, "global_position", target, 0.8)
-	
-	if tween_rot:
-		tween_rot.kill()
-	tween_rot = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tween_rot.tween_property(self, "rotation_degrees", 0, 0.3)
-
 # Mouse enter hover effect
 func _on_mouse_entered():
 	if home_field:
-		# Show zoom card only if in hand field and not in Drag state
-		if home_field.name == "hand" and state_machine.current_state.name != "Drag":
+		# Show zoom card for hand and Events fields, but not in Drag state
+		if (home_field.name == "hand" || home_field.name == "Events") and state_machine.current_state.name != "Drag":
 			create_zoom_card()
 		
-		# Only show hover effects for cards not in withdraw or assets fields
-		if !home_field.iswithdraw and !home_field.isasset and !home_field.isevent:
+		# Different hover effects based on field type
+		if !home_field.iswithdraw and !home_field.isasset:
 			state_machine.on_mouse_entered()
-			shadow_texture_rect.visible = true
 			
-			if tween_hover:
-				tween_hover.kill()
-			tween_hover = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-			tween_hover.tween_property(self, "scale", Vector2(1.2, 1.1), 0.2)
+			# Don't show shadow for event cards in the Events field
+			if !(if_event and home_field.isevent):
+				shadow_texture_rect.visible = true
 			
-			$AudioStreamPlayer2D.play()
+			# Only apply scaling effect if not in the Events field
+			if !home_field.isevent:
+				if tween_hover:
+					tween_hover.kill()
+				tween_hover = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+				tween_hover.tween_property(self, "scale", Vector2(1.2, 1.1), 0.2)
+				
+				$AudioStreamPlayer2D.play()
 		# For withdraw field, only show minimal hover effect for right-click functionality
 		elif home_field.iswithdraw:
 			state_machine.on_mouse_entered()
@@ -409,9 +407,14 @@ func _on_mouse_exited():
 	remove_zoom_card()
 	
 	state_machine.on_mouse_exited()
-	shadow_texture_rect.visible = false
 	
-	if tween_hover:
-		tween_hover.kill()
-	tween_hover = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tween_hover.tween_property(self, "scale", Vector2(1, 1), 0.15)
+	# Only hide shadow if it was previously shown
+	if shadow_texture_rect.visible:
+		shadow_texture_rect.visible = false
+	
+	# Only reset scale if we previously scaled it
+	if scale != Vector2(1, 1):
+		if tween_hover:
+			tween_hover.kill()
+		tween_hover = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tween_hover.tween_property(self, "scale", Vector2(1, 1), 0.15)
