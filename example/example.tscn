@@ -1,15 +1,37 @@
-[gd_scene load_steps=6 format=3 uid="uid://buh3412b0qtpp"]
+[gd_scene load_steps=8 format=3 uid="uid://buh3412b0qtpp"]
 
 [ext_resource type="PackedScene" uid="uid://biim2lxri0akl" path="res://example/field/field.tscn" id="1_fkhir"]
 [ext_resource type="Script" path="res://example/Signal_bus.gd" id="1_swl7a"]
+[ext_resource type="Shader" path="res://example/background.gdshader" id="2_7teug"]
 [ext_resource type="Script" path="res://example/drawcard.gd" id="3_aopf2"]
 [ext_resource type="Script" path="res://example/end_turn.gd" id="4_d401k"]
 [ext_resource type="PackedScene" uid="uid://b0u4pf74opd1e" path="res://audio_stream_player.tscn" id="5_akeb5"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fpqm6"]
+shader = ExtResource("2_7teug")
+shader_parameter/spin_rotation_speed = 2.0
+shader_parameter/move_speed = 7.0
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/colour_1 = Color(0.12, 0.8, 0.550667, 1)
+shader_parameter/colour_2 = Color(0.26051, 0.438146, 0.488672, 1)
+shader_parameter/colour_3 = Color(0.1, 0.137, 0.145, 1)
+shader_parameter/contrast = 3.5
+shader_parameter/lighting = 0.2
+shader_parameter/spin_amount = 0.25
+shader_parameter/pixel_filter = 350.0
+shader_parameter/is_rotating = false
 
 [node name="Game" type="Node"]
 
 [node name="Signalbus" type="Node" parent="."]
 script = ExtResource("1_swl7a")
+
+[node name="ColorRect" type="ColorRect" parent="Signalbus"]
+show_behind_parent = true
+material = SubResource("ShaderMaterial_fpqm6")
+offset_top = -3.0
+offset_right = 1149.0
+offset_bottom = 650.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Signalbus" groups=["fields"]]
 

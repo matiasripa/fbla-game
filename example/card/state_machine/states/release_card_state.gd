@@ -11,7 +11,6 @@ func _enter():
 	
 	if field_areas.is_empty():
 		card.home_field.return_card_starting_position(card)
-		card.smooth_move_to(card.get_parent().global_position)
 	else:
 		var new_field = field_areas[0].get_parent() as Field
 		
