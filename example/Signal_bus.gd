@@ -170,11 +170,46 @@ func _on_game_over_confirmed():
 
 # Update all UI labels with current values
 func update_all_labels():
+	# Actions label
 	action_label.text = "Actions remaining: " + str(MAX_ACTIONS_PER_TURN - actions_this_turn)
+
+	# Money label
 	money_label.text = "Money: " + str(money)
+	if money >= 50:
+		money_label.add_theme_color_override("font_color", Color(0, 1, 0))  # Green
+	elif money >= 30:
+		money_label.add_theme_color_override("font_color", Color(1, 1, 0))  # Yellow
+	else:
+		money_label.add_theme_color_override("font_color", Color(1, 0, 0))  # Red
+
+	# CO2 label (inverted logic since higher CO2 is worse)
 	co2_label.text = "CO2: " + str(co2)
+	if co2 >= 50:
+		co2_label.add_theme_color_override("font_color", Color(1, 0, 0))  # Red
+	elif co2 >= 30:
+		co2_label.add_theme_color_override("font_color", Color(1, 1, 0))  # Yellow
+	else:
+		co2_label.add_theme_color_override("font_color", Color(0, 1, 0))  # Green
+
+	# Iron label
 	iron_label.text = "Iron: " + str(iron)
+	if iron >= 50:
+		iron_label.add_theme_color_override("font_color", Color(0, 1, 0))  # Green
+	elif iron >= 30:
+		iron_label.add_theme_color_override("font_color", Color(1, 1, 0))  # Yellow
+	else:
+		iron_label.add_theme_color_override("font_color", Color(1, 0, 0))  # Red
+
+	# Reputation label
 	reputation_label.text = "Reputation: " + str(reputation)
+	if reputation >= 50:
+		reputation_label.add_theme_color_override("font_color", Color(0, 1, 0))  # Green
+	elif reputation >= 30:
+		reputation_label.add_theme_color_override("font_color", Color(1, 1, 0))  # Yellow
+	else:
+		reputation_label.add_theme_color_override("font_color", Color(1, 0, 0))  # Red
+
+	# Turn counter label stays the same color
 	turn_counter_label.text = "Turn: " + str(current_turn) + "/" + str(MAX_TURNS)
 
 # Track action usage

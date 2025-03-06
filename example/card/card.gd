@@ -128,7 +128,7 @@ var zoom_position: Vector2 = Vector2(800, 100)  # Position on right side of scre
 # Add this method to create the zoomed card
 func create_zoom_card():
 	# Allow zoom for cards in both hand and event fields
-	if home_field and (home_field.name == "hand" || home_field.name == "Events") and !zoom_active and state_machine.current_state.name != "Drag":
+	if home_field and (home_field.name == "hand" || home_field.name == "Events" || home_field.name == "Assets" || home_field.name == "Withdraw") and !zoom_active and state_machine.current_state.name != "Drag":
 		# Create a duplicate of this card for zooming
 		zoom_card = duplicate()
 		
