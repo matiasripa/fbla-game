@@ -12,6 +12,7 @@ extends Node
 @onready var turn_counter_label = $CanvasLayer/TurnCounterLabel
 @onready var background = $background
 @onready var fade_overlay = $fade_overlay
+@onready var quit_button = $CanvasLayer/QuitButton
 var cardResource = preload("res://example/card/card.tscn")
 
 # Background images - 15 factory images
@@ -81,12 +82,55 @@ func _ready():
 		add_child(overlay)
 		fade_overlay = overlay
 	
+	# Create quit button if it doesn't exist
+	if not $CanvasLayer.has_node("QuitButton"):
+		var button = Button.new()
+		button.name = "QuitButton"
+		button.text = "Quit"
+		button.position = Vector2(20, 650)  # Bottom left corner
+		button.size = Vector2(80, 30)
+		$CanvasLayer.add_child(button)
+		quit_button = button
+	
+	# Connect quit button if not already connected
+	if not quit_button.is_connected("pressed", Callable(self, "_on_quit_button_pressed")):
+		quit_button.connect("pressed", Callable(self, "_on_quit_button_pressed"))
+	
 	reset_turn()
 	update_all_labels()
 	
 	# Set initial background
 	background.texture = factory_textures[0]
 
+# Process input events for ESC key handling
+func _input(event):
+	if event is InputEventKey:
+		if event.pressed and event.keycode == KEY_ESCAPE:
+			_on_quit_button_pressed()
+
+# Quit button pressed handler - FIXED
+func _on_quit_button_pressed():
+	var quit_dialog = ConfirmationDialog.new()
+	quit_dialog.title = "Quit Game"
+	quit_dialog.dialog_text = "Are you sure you want to quit the game?"
+	quit_dialog.get_ok_button().text = "Yes"
+	quit_dialog.get_cancel_button().text = "No"
+	
+	# Connect the signal before adding to scene tree
+	quit_dialog.confirmed.connect(_confirm_quit)
+	
+	# Add dialog to scene
+	add_child(quit_dialog)
+	quit_dialog.popup_centered()
+	
+	# Ensure dialog is freed when closed
+	quit_dialog.close_requested.connect(quit_dialog.queue_free)
+	quit_dialog.canceled.connect(quit_dialog.queue_free)
+
+# Confirm quit handler
+func _confirm_quit():
+	print("Quitting game...")
+	get_tree().quit()
 
 # Reset turn state
 func reset_turn():

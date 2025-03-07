@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://buh3412b0qtpp"]
+[gd_scene load_steps=10 format=3 uid="uid://buh3412b0qtpp"]
 
 [ext_resource type="PackedScene" uid="uid://biim2lxri0akl" path="res://example/field/field.tscn" id="1_fkhir"]
 [ext_resource type="Script" path="res://example/Signal_bus.gd" id="1_swl7a"]
@@ -7,6 +7,7 @@
 [ext_resource type="Shader" path="res://example/fire.gdshader" id="4_h1m6o"]
 [ext_resource type="Texture2D" uid="uid://kmkudg1ghyt8" path="res://Picsart_25-03-06_20-45-14-524.png" id="5_0btdp"]
 [ext_resource type="PackedScene" uid="uid://b0u4pf74opd1e" path="res://audio_stream_player.tscn" id="5_akeb5"]
+[ext_resource type="Script" path="res://example/quit_button.gd" id="7_oarpl"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3qu4y"]
 shader = ExtResource("4_h1m6o")
@@ -185,6 +186,14 @@ offset_top = 8.0
 offset_right = 1144.0
 offset_bottom = 31.0
 text = "count :"
+
+[node name="QuitButton" type="Button" parent="Signalbus/CanvasLayer"]
+offset_left = 25.0
+offset_top = 595.0
+offset_right = 124.0
+offset_bottom = 626.0
+text = "Quit"
+script = ExtResource("7_oarpl")
 
 [node name="AudioStreamPlayer" parent="." instance=ExtResource("5_akeb5")]
 
