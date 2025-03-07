@@ -3,7 +3,8 @@ extends CardState
 
 func _enter():
 	card.label.text = "DRAG"
-	
+	card.update_highlight_state(true)
+
 	# Make sure to remove any zoom card when entering drag state
 	if card.zoom_active:
 		card.remove_zoom_card()
@@ -25,3 +26,6 @@ func on_input(event: InputEvent):
 	if confirm:
 		get_viewport().set_input_as_handled()
 		transitioned.emit("Release")
+func _exit():
+	# Turn off highlight when exiting drag state
+	card.update_highlight_state(false)

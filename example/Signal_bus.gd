@@ -10,7 +10,17 @@ extends Node
 @onready var iron_label = $CanvasLayer/IronLabel
 @onready var reputation_label = $CanvasLayer/ReputationLabel
 @onready var turn_counter_label = $CanvasLayer/TurnCounterLabel
+@onready var background = $background
 var cardResource = preload("res://example/card/card.tscn")
+
+# Background images
+var factory1_texture = preload("res://example/factory 1.jpg")  
+var factory2_texture = preload("res://example/factory 2.jpg")  
+var factory3_texture = preload("res://example/factory 3.jpg")  
+var current_factory = 1
+
+# Background transition
+var transition_tween: Tween
 
 # Game state tracking
 var is_player_turn: bool = true
@@ -46,6 +56,10 @@ var event_text_option_selected = -1
 func _ready():
 	reset_turn()
 	update_all_labels()
+	
+	# Set initial background
+	background.texture = factory1_texture
+
 
 # Reset turn state
 func reset_turn():
@@ -70,6 +84,9 @@ func end_turn():
 		# Increment turn counter only once
 		current_turn += 1
 		
+		# Check if we need to change the factory background
+		check_factory_transition()
+		
 		# Check win/loss conditions
 		check_game_conditions()
 		
@@ -78,7 +95,46 @@ func end_turn():
 		if current_turn == 10:
 			which_event = randi() % events_types.size()
 			event_text("test",events_types[0])
-			
+
+# Check if we need to transition to a new factory background
+func check_factory_transition():
+	print("Turn: ", current_turn, " Current factory: ", current_factory)
+	if current_turn == 12:
+		transition_to_factory(2)
+	elif current_turn == 20:
+		transition_to_factory(3)
+
+# Transition to a new factory background with fade effect
+func transition_to_factory(factory_num: int):
+	# Cancel any existing tween
+	if transition_tween:
+		transition_tween.kill()
+	
+	# Create new background texture
+	var new_texture
+	match factory_num:
+		1: new_texture = factory1_texture
+		2: new_texture = factory2_texture
+		3: new_texture = factory3_texture
+	
+	# Create a temporary overlay TextureRect for the fade effect
+	var overlay = TextureRect.new()
+	overlay.texture = new_texture
+	overlay.modulate = Color(1, 1, 1, 0)  # Start fully transparent
+	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	$background.add_child(overlay)
+	
+	# Create tween for fade transition
+	transition_tween = create_tween()
+	transition_tween.tween_property(overlay, "modulate", Color(1, 1, 1, 1), 1.0)
+	transition_tween.tween_callback(func(): background.texture = new_texture)
+	transition_tween.tween_property(overlay, "modulate", Color(1, 1, 1, 0), 0.5)
+	transition_tween.tween_callback(func(): 
+		overlay.queue_free()
+		current_factory = factory_num
+		print("Factory updated to: ", factory_num)
+	)
 
 # Process card effects at turn end
 func process_card_effects():
@@ -116,7 +172,6 @@ func apply_card_effects(card, is_positive: bool, is_event: bool):
 	if co2 <= 0:
 		co2 = 0
 
-
 # Check win/loss conditions
 func check_game_conditions():
 	if current_turn > MAX_TURNS:
@@ -146,7 +201,6 @@ func show_game_over(message: String):
 	game_over_dialog.popup_centered()
 	game_over_dialog.connect("confirmed", _on_game_over_confirmed)
 
-
 func event_text(messege: String,event : String):
 	var event_dialogue = AcceptDialog.new()
 	event_dialogue.dialog_text = messege
@@ -155,8 +209,6 @@ func event_text(messege: String,event : String):
 	event_dialogue.popup_centered()
 	event_dialogue.connect("confirmed", on_event_accept)
 	event_dialogue.connect("canceled", on_event_decline)
-	
-	
 	
 func on_event_accept():
 	_on_events_eventcard(which_event,1) 
@@ -238,6 +290,3 @@ func _on_events_eventcard(eventstate: Variant, event_input: int) -> void:
 	elif event_input == 0:  # User declined the event
 		# Handle declined event (maybe apply a different penalty?)
 		pass
-
-
-	

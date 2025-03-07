@@ -4,10 +4,10 @@
 [ext_resource type="Shader" path="res://example/card/destroy.gdshader" id="1_f0hiy"]
 [ext_resource type="Script" path="res://example/card/card.gd" id="1_gelhr"]
 [ext_resource type="Script" path="res://example/card/state_machine/card_state_machine.gd" id="2_vqdgh"]
-[ext_resource type="Texture2D" uid="uid://d1htpyera6gqa" path="res://XPvTc.png" id="3_4go66"]
 [ext_resource type="Script" path="res://example/card/state_machine/states/idle_card_state.gd" id="3_bx54l"]
 [ext_resource type="Texture2D" uid="uid://0ewtuu0hueii" path="res://icon.svg" id="3_obxak"]
 [ext_resource type="Script" path="res://example/card/state_machine/states/clicked_card_state.gd" id="4_2bop5"]
+[ext_resource type="Texture2D" uid="uid://b5wmyr128kb2l" path="res://mathew-pembleton-wispysmokev2.jpg" id="4_b0sa5"]
 [ext_resource type="Script" path="res://example/card/state_machine/states/drag_card_state.gd" id="5_f7w2d"]
 [ext_resource type="Script" path="res://example/card/state_machine/states/release_card_state.gd" id="6_r0y7t"]
 [ext_resource type="FontFile" uid="uid://bkgxbjbkij5j0" path="res://pixel font.ttf" id="6_wdugn"]
@@ -17,20 +17,27 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_x353h"]
 resource_local_to_scene = true
 shader = ExtResource("1_0tef8")
-shader_parameter/rect_size = Vector2(100, 150)
-shader_parameter/fov = 90.0
-shader_parameter/cull_back = false
-shader_parameter/y_rot = 0.0
-shader_parameter/x_rot = 0.0
-shader_parameter/inset = 0.1
+shader_parameter/Line_Smoothness = 0.045
+shader_parameter/Line_Width = 0.084
+shader_parameter/Brightness = 3.0
+shader_parameter/Rotation_deg = 30.0
+shader_parameter/Distortion = 1.8
+shader_parameter/Speed = 0.7
+shader_parameter/Position = 0.0
+shader_parameter/Position_Min = 0.25
+shader_parameter/Position_Max = 0.5
+shader_parameter/Alpha = 1.0
+shader_parameter/is_clicked = 1.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0ruxe"]
 resource_local_to_scene = true
 shader = ExtResource("1_f0hiy")
-shader_parameter/dissolve_value = 0.071
-shader_parameter/burn_size = 0.07
-shader_parameter/burn_color = Color(1, 0.552941, 0, 1)
-shader_parameter/dissolve_texture = ExtResource("3_4go66")
+shader_parameter/dissolve_value = 0.42
+shader_parameter/burn_size = 0.09
+shader_parameter/ash_color = Color(0, 0, 0, 1)
+shader_parameter/burn_color = Color(0.882, 0.777, 0.169, 1)
+shader_parameter/proburn_color = Color(0.804, 0.2, 0.093, 1)
+shader_parameter/dissolve_texture = ExtResource("4_b0sa5")
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_6t2yu"]
 
@@ -39,7 +46,6 @@ size = Vector2(100, 150)
 
 [node name="Card" type="Control"]
 material = SubResource("ShaderMaterial_x353h")
-use_parent_material = true
 custom_minimum_size = Vector2(100, 150)
 layout_mode = 3
 anchors_preset = 0

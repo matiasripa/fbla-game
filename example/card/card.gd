@@ -125,6 +125,17 @@ var zoom_active: bool = false
 var zoom_scale: float = 2.5
 var zoom_position: Vector2 = Vector2(800, 100)  # Position on right side of screen
 
+
+
+# Update shader parameter when state changes
+func update_highlight_state(is_clicked: bool):
+	# Set the is_clicked shader parameter (1.0 for clicked, 0.0 for not clicked)
+	shader_material.set_shader_parameter("is_clicked", 1.0 if is_clicked else 0.0)
+
+
+
+
+
 # Add this method to create the zoomed card
 func create_zoom_card():
 	# Allow zoom for cards in both hand and event fields
@@ -261,6 +272,8 @@ func _ready():
 	
 	# Update all labels with current values (same as before)
 	_update_labels()
+	# Initialize the is_clicked shader parameter to 0.0 (not clicked)
+	shader_material.set_shader_parameter("is_clicked", 0.0)
 
 
 # Updates card labels based on current state (positive or negative)

@@ -1,37 +1,31 @@
-[gd_scene load_steps=8 format=3 uid="uid://buh3412b0qtpp"]
+[gd_scene load_steps=9 format=3 uid="uid://buh3412b0qtpp"]
 
 [ext_resource type="PackedScene" uid="uid://biim2lxri0akl" path="res://example/field/field.tscn" id="1_fkhir"]
 [ext_resource type="Script" path="res://example/Signal_bus.gd" id="1_swl7a"]
-[ext_resource type="Shader" path="res://example/background.gdshader" id="2_7teug"]
 [ext_resource type="Script" path="res://example/drawcard.gd" id="3_aopf2"]
 [ext_resource type="Script" path="res://example/end_turn.gd" id="4_d401k"]
+[ext_resource type="Shader" path="res://example/fire.gdshader" id="4_h1m6o"]
+[ext_resource type="Texture2D" uid="uid://kmkudg1ghyt8" path="res://Picsart_25-03-06_20-45-14-524.png" id="5_0btdp"]
 [ext_resource type="PackedScene" uid="uid://b0u4pf74opd1e" path="res://audio_stream_player.tscn" id="5_akeb5"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_fpqm6"]
-shader = ExtResource("2_7teug")
-shader_parameter/spin_rotation_speed = 2.0
-shader_parameter/move_speed = 7.0
-shader_parameter/offset = Vector2(0, 0)
-shader_parameter/colour_1 = Color(0.12, 0.8, 0.550667, 1)
-shader_parameter/colour_2 = Color(0.26051, 0.438146, 0.488672, 1)
-shader_parameter/colour_3 = Color(0.1, 0.137, 0.145, 1)
-shader_parameter/contrast = 3.5
-shader_parameter/lighting = 0.2
-shader_parameter/spin_amount = 0.25
-shader_parameter/pixel_filter = 350.0
-shader_parameter/is_rotating = false
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3qu4y"]
+shader = ExtResource("4_h1m6o")
+shader_parameter/fireMovement = Vector2(0.01, -0.05)
+shader_parameter/distortionMovement = Vector2(-0.01, -0.03)
+shader_parameter/normalStrength = 10.0
+shader_parameter/distortionStrength = 0.001
 
 [node name="Game" type="Node"]
 
 [node name="Signalbus" type="Node" parent="."]
 script = ExtResource("1_swl7a")
 
-[node name="ColorRect" type="ColorRect" parent="Signalbus"]
+[node name="background" type="TextureRect" parent="Signalbus"]
 show_behind_parent = true
-material = SubResource("ShaderMaterial_fpqm6")
 offset_top = -3.0
 offset_right = 1149.0
 offset_bottom = 650.0
+expand_mode = 1
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Signalbus" groups=["fields"]]
 
@@ -66,18 +60,26 @@ grow_vertical = 0
 isasset = true
 
 [node name="destroy" parent="Signalbus/CanvasLayer" instance=ExtResource("1_fkhir")]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = 13.0
-offset_top = -428.0
-offset_right = 434.0
-offset_bottom = -278.0
+anchor_left = 0.698351
+anchor_top = 0.566358
+anchor_right = 0.698351
+anchor_bottom = 0.566358
+offset_left = -210.5
+offset_top = -150.0
+offset_right = 210.5
 grow_horizontal = 2
 grow_vertical = 0
-isasset = true
+isdestroy = true
+
+[node name="ColorRect" type="ColorRect" parent="Signalbus/CanvasLayer/destroy"]
+show_behind_parent = true
+material = SubResource("ShaderMaterial_3qu4y")
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Signalbus/CanvasLayer/destroy"]
+layout_mode = 2
+texture = ExtResource("5_0btdp")
+expand_mode = 1
 
 [node name="Withdraw" parent="Signalbus/CanvasLayer" instance=ExtResource("1_fkhir")]
 anchor_left = 0.5
@@ -131,11 +133,16 @@ offset_bottom = 484.0
 text = "Actions remaining: 2"
 
 [node name="ResourcePanel" type="Panel" parent="Signalbus/CanvasLayer"]
-visible = false
-offset_left = 892.0
-offset_top = 466.0
-offset_right = 932.0
-offset_bottom = 506.0
+offset_left = 961.0
+offset_top = 408.0
+offset_right = 1125.0
+offset_bottom = 580.0
+
+[node name="TextureRect" type="TextureRect" parent="Signalbus/CanvasLayer/ResourcePanel"]
+layout_mode = 0
+offset_left = 60.0
+offset_right = 231.0
+offset_bottom = 169.0
 
 [node name="MoneyLabel" type="Label" parent="Signalbus/CanvasLayer"]
 offset_left = 970.0
@@ -166,6 +173,7 @@ offset_bottom = 552.0
 text = "ReputationLabel"
 
 [node name="TurnCounterLabel" type="Label" parent="Signalbus/CanvasLayer"]
+top_level = true
 offset_left = 1016.0
 offset_top = 8.0
 offset_right = 1144.0

@@ -1,57 +1,66 @@
 shader_type canvas_item;
+render_mode blend_premul_alpha;
 
-uniform vec2 rect_size;
+uniform float Line_Smoothness : hint_range(0, 0.1) = 0.045;
+uniform float Line_Width : hint_range(0, 0.2) = 0.09;
+uniform float Brightness = 3.0;
+uniform float Rotation_deg : hint_range(-90, 90) = 30;
+uniform float Distortion : hint_range(1, 2) = 1.8;
+uniform float Speed = 0.7;
+uniform float Position : hint_range(0, 1) = 0;
+uniform float Position_Min = 0.25;
+uniform float Position_Max = 0.5;
+uniform float Alpha : hint_range(0, 1) = 1;
+uniform float is_clicked : hint_range(0, 1) = 0.0; // New uniform to control when effect is active
 
-// Camera FOV
-uniform float fov : hint_range(1, 179) = 90;
-uniform bool cull_back = true;
-uniform float y_rot : hint_range(-360.0, 360.0) = 0.0;
-uniform float x_rot : hint_range(-360.0, 360.0) = 0.0;
-// At 0, the image retains its size when unrotated.
-// At 1, the image is resized so that it can do a full
-// rotation without clipping inside its rect.
-uniform float inset : hint_range(0, 1) = 0.0;
-// Consider changing this to a uniform and changing it from code
+void fragment() {
+    // Get the original texture color
+    vec4 tex_color = texture(TEXTURE, UV);
+    
+    // Only apply effect if the card is clicked
+    if (is_clicked > 0.5) {
+        // Calculate center and gradient towards edges
+        vec2 center_uv = UV - vec2(0.5, 0.5);
+        float gradient_to_edge = max(abs(center_uv.x), abs(center_uv.y));
+        gradient_to_edge = gradient_to_edge * Distortion;
+        gradient_to_edge = 1.0 - gradient_to_edge;
+        
+        // Apply rotation based on Rotation_deg
+        float rotation_radians = radians(Rotation_deg);
+        mat2 rotation_matrix = mat2(vec2(cos(rotation_radians), sin(rotation_radians)),
+                                    vec2(-sin(rotation_radians), cos(rotation_radians)));
+        vec2 rotated_uv = rotation_matrix * center_uv;
 
-varying flat vec2 o;
-varying vec3 p;
+        // Remap position for dynamic effect
+        float output_range = Position_Max - Position_Min;
+        float remapped_position = Position_Min + output_range * Position;
 
-// Creates rotation matrix
-void vertex(){
-	float sin_b = sin(y_rot / 180.0 * PI);
-	float cos_b = cos(y_rot / 180.0 * PI);
-	float sin_c = sin(x_rot / 180.0 * PI);
-	float cos_c = cos(x_rot / 180.0 * PI);
+        // Animate the texture offset over time
+        float remapped_time = fract(TIME * Speed + remapped_position);
+        remapped_time = -2.0 + 4.0 * remapped_time;
 
-	mat3 inv_rot_mat;
-	inv_rot_mat[0][0] = cos_b;
-	inv_rot_mat[0][1] = 0.0;
-	inv_rot_mat[0][2] = -sin_b;
+        // Calculate offset UV and line effect
+        vec2 offset_uv = rotated_uv + vec2(remapped_time, 0.0);
+        float line = abs(offset_uv.x);
+        line = gradient_to_edge * line;
+        line = sqrt(line);
 
-	inv_rot_mat[1][0] = sin_b * sin_c;
-	inv_rot_mat[1][1] = cos_c;
-	inv_rot_mat[1][2] = cos_b * sin_c;
+        // Adjust line width and smoothness
+        float line_smoothness = clamp(Line_Smoothness, 0.001, 1.0);
+        float offset_plus = Line_Width + line_smoothness;
+        float offset_minus = Line_Width - line_smoothness;
 
-	inv_rot_mat[2][0] = sin_b * cos_c;
-	inv_rot_mat[2][1] = -sin_c;
-	inv_rot_mat[2][2] = cos_b * cos_c;
+        // Remap the line effect for highlight
+        float remapped_line = (line - offset_plus) / (offset_minus - offset_plus);
+        remapped_line = clamp(remapped_line, 0.0, 1.0);
 
+        // Apply the highlight effect to the texture
+        tex_color.rgb += vec3(remapped_line) * Brightness;
+    }
+    
+    // Keep the original alpha channel intact
+    tex_color.a *= Alpha;
 
-	float t = tan(fov / 360.0 * PI);
-	p = inv_rot_mat * vec3((UV - 0.5), 0.5 / t);
-	float v = (0.5 / t) + 0.5;
-	p.xy *= v * inv_rot_mat[2].z;
-	o = v * inv_rot_mat[2].xy;
-
-	// to (rect_size is a uniform):
-	VERTEX += (UV - 0.5) * rect_size * t * (1.0 - inset);
-
-//	VERTEX += (UV - 0.5) / TEXTURE_PIXEL_SIZE * t * (1.0 - inset);
-}
-
-void fragment(){
-	if (cull_back && p.z <= 0.0) discard;
-	vec2 uv = (p.xy / p.z).xy - o;
-    COLOR = texture(TEXTURE, uv + 0.5);
-	COLOR.a *= step(max(abs(uv.x), abs(uv.y)), 0.5);
+    // Output the final color
+    COLOR = tex_color;
 }

@@ -5,11 +5,13 @@ extends MarginContainer
 @onready var card_drop_area_right: Area2D = $CardDropAreaRight
 @onready var card_drop_area_left: Area2D = $CardDropAreaLeft
 @onready var cards_holder: HBoxContainer = $CardsHolder  # Container for cards
+@onready var fire_border: ColorRect = $"../destroy/ColorRect" # Reference to the fire border
 
 # Field type flags
 @export var isasset: bool = false  # If this is the Assets field
 @export var iswithdraw: bool = false  # If this is the Withdraw field
 @export var isevent: bool = false  # If this is the Events field
+@export var isdestroy: bool = false  # If this is the Destroy field
 
 var cardResource = preload("res://example/card/card.tscn")  # Card scene to instantiate
 signal transfercard(card)  # Signal emitted when card transfers to another field
@@ -18,6 +20,12 @@ var wichevent = 0  # Current event type
 
 func _ready():
 	$Label.text = name  # Set field label to match node name
+	
+	# Enable fire border if this is the destroy field
+	if isdestroy:
+		fire_border.visible = true
+		# Make the panel more transparent to see the fire effect better
+		$Panel.modulate.a = 0.15
 	
 	# Set home_field for all existing cards
 	for child in cards_holder.get_children():
@@ -75,8 +83,7 @@ func _on_button_pressed() -> void:
 	var card = cardResource.instantiate()  
 	cards_holder.add_child(card)  
 	set_new_card(card)
-	
-# Setup event cards
+
 # Setup event cards
 func event_setup():
 	var card = cardResource.instantiate()
