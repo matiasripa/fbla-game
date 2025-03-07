@@ -11,16 +11,33 @@ extends Node
 @onready var reputation_label = $CanvasLayer/ReputationLabel
 @onready var turn_counter_label = $CanvasLayer/TurnCounterLabel
 @onready var background = $background
+@onready var fade_overlay = $fade_overlay
 var cardResource = preload("res://example/card/card.tscn")
 
-# Background images
-var factory1_texture = preload("res://example/factory 1.jpg")  
-var factory2_texture = preload("res://example/factory 2.jpg")  
-var factory3_texture = preload("res://example/factory 3.jpg")  
-var current_factory = 1
+# Background images - 15 factory images
+var factory_textures = [
+	preload("res://factory/fact1.png"),
+	preload("res://factory/fact2.png"),
+	preload("res://factory/fact3.png"),
+	preload("res://factory/fact4.png"),
+	preload("res://factory/fact5.png"),
+	preload("res://factory/fact6.png"),
+	preload("res://factory/fact7.png"),
+	preload("res://factory/fact8.png"),
+	preload("res://factory/fact9.png"),
+	preload("res://factory/fact10.png"),
+	preload("res://factory/fact11.png"),
+	preload("res://factory/fact12.png"),
+	preload("res://factory/fact13.png"),
+	preload("res://factory/fact14.png"),
+	preload("res://factory/fact15.png")
+]
+var current_factory_index = 0
 
-# Background transition
+# Fade transition variables
 var transition_tween: Tween
+var next_factory_texture = null
+var is_transitioning = false
 
 # Game state tracking
 var is_player_turn: bool = true
@@ -54,11 +71,21 @@ var event_text_option_selected = -1
 
 # Initialize game state
 func _ready():
+	# Create the fade overlay if it doesn't exist
+	if not has_node("fade_overlay"):
+		var overlay = ColorRect.new()
+		overlay.name = "fade_overlay"
+		overlay.color = Color(0, 0, 0, 0)  # Start fully transparent
+		overlay.size = Vector2(1200, 700)  # Make sure it covers the whole screen
+		overlay.z_index = 100  # Ensure it's drawn on top
+		add_child(overlay)
+		fade_overlay = overlay
+	
 	reset_turn()
 	update_all_labels()
 	
 	# Set initial background
-	background.texture = factory1_texture
+	background.texture = factory_textures[0]
 
 
 # Reset turn state
@@ -98,43 +125,42 @@ func end_turn():
 
 # Check if we need to transition to a new factory background
 func check_factory_transition():
-	print("Turn: ", current_turn, " Current factory: ", current_factory)
-	if current_turn == 12:
-		transition_to_factory(2)
-	elif current_turn == 20:
-		transition_to_factory(3)
+	# Every 2 turns, change to the next factory image
+	if current_turn % 2 == 1 and current_turn > 1:
+		var next_factory_index = (current_turn - 1) / 2
+		if next_factory_index < factory_textures.size():
+			transition_to_factory(next_factory_index)
 
 # Transition to a new factory background with fade effect
-func transition_to_factory(factory_num: int):
-	# Cancel any existing tween
-	if transition_tween:
+func transition_to_factory(factory_index: int):
+	# Check if the factory index is valid
+	if factory_index < 0 or factory_index >= factory_textures.size():
+		return
+	
+	# If already transitioning, cancel the previous tween
+	if is_transitioning and transition_tween:
 		transition_tween.kill()
 	
-	# Create new background texture
-	var new_texture
-	match factory_num:
-		1: new_texture = factory1_texture
-		2: new_texture = factory2_texture
-		3: new_texture = factory3_texture
+	is_transitioning = true
+	next_factory_texture = factory_textures[factory_index]
 	
-	# Create a temporary overlay TextureRect for the fade effect
-	var overlay = TextureRect.new()
-	overlay.texture = new_texture
-	overlay.modulate = Color(1, 1, 1, 0)  # Start fully transparent
-	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
-	$background.add_child(overlay)
-	
-	# Create tween for fade transition
+	# Create a new tween for the fade out
 	transition_tween = create_tween()
-	transition_tween.tween_property(overlay, "modulate", Color(1, 1, 1, 1), 1.0)
-	transition_tween.tween_callback(func(): background.texture = new_texture)
-	transition_tween.tween_property(overlay, "modulate", Color(1, 1, 1, 0), 0.5)
-	transition_tween.tween_callback(func(): 
-		overlay.queue_free()
-		current_factory = factory_num
-		print("Factory updated to: ", factory_num)
-	)
+	transition_tween.tween_property(fade_overlay, "color", Color(0, 0, 0, 1), 0.5)  # Fade to black
+	transition_tween.tween_callback(Callable(self, "_change_background").bind(factory_index))
+	transition_tween.tween_property(fade_overlay, "color", Color(0, 0, 0, 0), 0.5)  # Fade back in
+	transition_tween.tween_callback(Callable(self, "_finish_transition"))
+
+# Change the background texture (called mid-transition)
+func _change_background(factory_index: int):
+	background.texture = factory_textures[factory_index]
+	current_factory_index = factory_index
+	print("Factory updated to: ", factory_index + 1)
+
+# Clean up after transition is complete
+func _finish_transition():
+	is_transitioning = false
+	next_factory_texture = null
 
 # Process card effects at turn end
 func process_card_effects():
