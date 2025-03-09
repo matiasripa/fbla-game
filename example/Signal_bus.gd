@@ -14,6 +14,8 @@ extends Node
 @onready var fade_overlay = $fade_overlay
 @onready var quit_button = $CanvasLayer/QuitButton
 var cardResource = preload("res://example/card/card.tscn")
+# Preload the end screen scene
+var end_screen_scene = preload("res://end screen.tscn")
 
 # Background images - 15 factory images
 var factory_textures = [
@@ -46,18 +48,19 @@ var actions_this_turn: int = 0
 const MAX_ACTIONS_PER_TURN = 2
 const MAX_TURNS = 30
 
+
 # Game resources
 var money: int = 50
 var co2: int = 0
-var iron: int = 50
+var iron: int = 100
 var reputation: int = 50
 var current_turn: int = 1
 
-# Win/loss thresholds
-const WIN_MONEY_THRESHOLD = 100
-const WIN_REPUTATION_THRESHOLD = 75
-const LOSE_CO2_THRESHOLD = 100
-const WIN_IRON_THRESHOLD = 25
+# Win/loss thresholds - UPDATED
+const WIN_MONEY_THRESHOLD = 50
+const WIN_REPUTATION_THRESHOLD = 50
+const LOSE_CO2_THRESHOLD = 60  # Changed from 51 to 60
+const WIN_IRON_THRESHOLD = 10  # Changed from 300 to 10
 
 # Event thresholds
 const LOW_MONEY = 10
@@ -72,6 +75,9 @@ var event_text_option_selected = -1
 
 # Initialize game state
 func _ready():
+	# Make sure to complete initialization before other nodes try to access this
+	process_priority = -1  # Ensure this runs before other nodes
+
 	# Create the fade overlay if it doesn't exist
 	if not has_node("fade_overlay"):
 		var overlay = ColorRect.new()
@@ -242,7 +248,7 @@ func apply_card_effects(card, is_positive: bool, is_event: bool):
 	if co2 <= 0:
 		co2 = 0
 
-# Check win/loss conditions
+# Check win/loss conditions - UPDATED
 func check_game_conditions():
 	if current_turn > MAX_TURNS:
 		if check_win_condition():
@@ -256,21 +262,40 @@ func check_game_conditions():
 	elif money <= LOW_MONEY:
 		pass  # Event handling for low money
 
-# Check if win conditions are met
+# Check if win conditions are met - UPDATED
 func check_win_condition() -> bool:
 	return (money >= WIN_MONEY_THRESHOLD and 
 			reputation >= WIN_REPUTATION_THRESHOLD and 
 			co2 < LOSE_CO2_THRESHOLD and 
 			iron >= WIN_IRON_THRESHOLD)
 
-# Show game over dialog
 func show_game_over(message: String):
-	var game_over_dialog = AcceptDialog.new()
-	game_over_dialog.dialog_text = message
-	add_child(game_over_dialog)
-	game_over_dialog.popup_centered()
-	game_over_dialog.connect("confirmed", _on_game_over_confirmed)
-
+	# Create an instance of the end screen
+	var end_screen = end_screen_scene.instantiate()
+	
+	# Set the game over reason based on updated conditions
+	if co2 >= LOSE_CO2_THRESHOLD:
+		end_screen.game_over_reason = "co2"
+	elif money < WIN_MONEY_THRESHOLD:
+		end_screen.game_over_reason = "money"
+	elif reputation < WIN_REPUTATION_THRESHOLD:
+		end_screen.game_over_reason = "reputation"
+	elif iron < WIN_IRON_THRESHOLD:
+		end_screen.game_over_reason = "money"  # Using money background for iron shortage
+	elif check_win_condition():
+		end_screen.game_over_reason = "victory"
+	else:
+		# Default game over (e.g., ran out of turns without winning)
+		end_screen.game_over_reason = "money"
+	
+	# Set the message (even though we're not displaying it)
+	end_screen.game_over_message = message
+	
+	# Add it to the scene tree
+	get_tree().root.add_child(end_screen)
+	
+	# Remove the current scene
+	queue_free()
 func event_text(messege: String,event : String):
 	var event_dialogue = AcceptDialog.new()
 	event_dialogue.dialog_text = messege
@@ -285,10 +310,6 @@ func on_event_accept():
 
 func on_event_decline():
 	_on_events_eventcard(which_event,0)
-
-# Handle game over dialog confirmation
-func _on_game_over_confirmed():
-	get_tree().reload_current_scene()  # Restart the game
 
 # Update all UI labels with current values
 func update_all_labels():

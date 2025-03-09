@@ -136,7 +136,6 @@ func update_highlight_state(is_clicked: bool):
 
 
 
-# Add this method to create the zoomed card
 func create_zoom_card():
 	# Allow zoom for cards in both hand and event fields
 	if home_field and (home_field.name == "hand" || home_field.name == "Events" || home_field.name == "Assets" || home_field.name == "Withdraw") and !zoom_active and state_machine.current_state.name != "Drag":
@@ -169,11 +168,72 @@ func create_zoom_card():
 			pos_effect_zoom.visible = false
 			neg_effect_zoom.visible = false
 		
-		# Add to canvas layer for visibility
-		var canvas = get_node("/root/Game/Signalbus/CanvasLayer")
-		canvas.add_child(zoom_card)
-		zoom_active = true
+		# Find canvas layer more reliably
+		var canvas = null
+		
+		# Try to find the CanvasLayer through the scene tree
+		var root = get_tree().root
+		for node in root.get_children():
+			# Look for Signalbus node or any node that might contain a CanvasLayer
+			var signal_bus = node.get_node_or_null("Signalbus")
+			if signal_bus:
+				canvas = signal_bus.get_node_or_null("CanvasLayer")
+				if canvas:
+					break
+		
+		# If not found, try to find any CanvasLayer in the scene
+		if canvas == null:
+			for node in root.get_children():
+				if node is Viewport:
+					for child in node.get_children():
+						if child is CanvasLayer:
+							canvas = child
+							break
+		
+		# Fallback to finding a CanvasLayer in any game node
+		if canvas == null:
+			canvas = find_canvas_layer()
+			
+		# Add to canvas layer if found
+		if canvas:
+			canvas.add_child(zoom_card)
+			zoom_active = true
+		else:
+			# Failed to find canvas, don't create zoom card
+			print("Failed to find canvas layer for zoom card")
+			zoom_card.queue_free()
+			zoom_card = null
 
+# Helper function to find any canvas layer in the scene
+func find_canvas_layer():
+	# First try the direct path
+	var canvas = get_node_or_null("/root/Game/Signalbus/CanvasLayer")
+	if canvas:
+		return canvas
+		
+	# Then try to get any canvas layer from the current scene
+	var current_scene = get_tree().current_scene
+	if current_scene:
+		# Try to get a direct child CanvasLayer
+		canvas = current_scene.get_node_or_null("Signalbus/CanvasLayer")
+		if canvas:
+			return canvas
+			
+		# Try to get any CanvasLayer that might be a direct child
+		for child in current_scene.get_children():
+			if child is CanvasLayer:
+				return child
+				
+			# Check one level deeper
+			for grandchild in child.get_children():
+				if grandchild is CanvasLayer:
+					return grandchild
+	
+	# If all else fails, create a new CanvasLayer
+	canvas = CanvasLayer.new()
+	canvas.name = "ZoomCardLayer"
+	get_tree().root.add_child(canvas)
+	return canvas
 
 
 # Add this method to remove the zoomed card
