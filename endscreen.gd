@@ -35,15 +35,21 @@ func set_background():
 	# Set texture based on game over reason
 	if game_over_reason == "co2":
 		background.texture = co2_loss_texture
+		$Lose_SFX.play()
+		
 	elif game_over_reason == "money":
 		background.texture = money_loss_texture
+		$Lose_SFX.play()
 	elif game_over_reason == "reputation":
 		background.texture = reputation_loss_texture
+		$Lose_SFX.play()
 	elif game_over_reason == "victory":
 		background.texture = victory_texture
+		$Win_SFX.play()
 	else:
 		# Default case if no specific reason is provided
 		background.texture = money_loss_texture
+		$Lose_SFX.play()
 
 func _process(delta):
 	if Input.is_action_just_pressed("ui_down") and current_selection < 1:

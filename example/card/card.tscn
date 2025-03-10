@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://3trgkf0u68ry"]
+[gd_scene load_steps=19 format=3 uid="uid://3trgkf0u68ry"]
 
 [ext_resource type="Shader" path="res://example/card/card.gdshader" id="1_0tef8"]
 [ext_resource type="Shader" path="res://example/card/destroy.gdshader" id="1_f0hiy"]
@@ -13,6 +13,7 @@
 [ext_resource type="FontFile" uid="uid://bkgxbjbkij5j0" path="res://pixel font.ttf" id="6_wdugn"]
 [ext_resource type="Script" path="res://example/card/state_machine/states/hover_card_state.gd" id="7_xjssr"]
 [ext_resource type="AudioStream" uid="uid://c5kaogo8u3i6u" path="res://card sound drawfinal.wav" id="12_htq76"]
+[ext_resource type="AudioStream" uid="uid://0sp6cnpfi8hs" path="res://example/Burn_Card.wav" id="14_cy1vc"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_x353h"]
 resource_local_to_scene = true
@@ -187,6 +188,9 @@ offset_left = 18.0
 offset_right = 65.0
 offset_bottom = 23.0
 text = "Name"
+
+[node name="Destroy" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("14_cy1vc")
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]

@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://c5jjo7lr8kska"]
+[gd_scene load_steps=5 format=3 uid="uid://c5jjo7lr8kska"]
 
 [ext_resource type="Script" path="res://endscreen.gd" id="1_fpw72"]
+[ext_resource type="AudioStream" uid="uid://bkgpnkia4gsyl" path="res://example/win.wav" id="2_5k8lw"]
 [ext_resource type="FontFile" uid="uid://bkgxbjbkij5j0" path="res://pixel font.ttf" id="2_ecq1p"]
+[ext_resource type="AudioStream" uid="uid://djl5nvmq48w6b" path="res://example/Lose.mp3" id="4_kd4t7"]
 
 [node name="Control" type="MarginContainer"]
 anchors_preset = 15
@@ -10,6 +12,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_fpw72")
+
+[node name="Win_SFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_5k8lw")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 2
@@ -70,3 +75,6 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("2_ecq1p")
 theme_override_font_sizes/font_size = 40
 text = "Exit"
+
+[node name="Lose_SFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_kd4t7")

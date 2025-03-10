@@ -15,6 +15,7 @@ extends Control
 @onready var shadow_texture_rect: TextureRect = $ColorRect/TextureRect  # Shadow effect
 @onready var card_texture: TextureRect = $ColorRect  # Main card texture
 
+
 # Material references for visual effects
 @onready var shader_material = material
 @onready var dissolve_material = card_texture.material
@@ -402,7 +403,7 @@ func _input(event):
 func destroy() -> void:
 	# Remove zoom if active
 	remove_zoom_card()
-	
+	$Destroy.play()
 	# Ensure we're using the dissolve material
 	card_texture.use_parent_material = false
 	if tween_destroy and tween_destroy.is_running():

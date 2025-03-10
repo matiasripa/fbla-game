@@ -17,6 +17,9 @@ var cardResource = preload("res://example/card/card.tscn")
 # Preload the end screen scene
 var end_screen_scene = preload("res://end screen.tscn")
 
+#audio streamer
+var bg_music := AudioStreamPlayer.new()
+
 # Background images - 15 factory images
 var factory_textures = [
 	preload("res://factory/fact1.png"),
@@ -78,6 +81,11 @@ func _ready():
 	# Make sure to complete initialization before other nodes try to access this
 	process_priority = -1  # Ensure this runs before other nodes
 
+	#the background music
+	bg_music.stream = load("res://example/BackgroundMusic.wav")
+	bg_music.autoplay = true
+	add_child(bg_music)
+	
 	# Create the fade overlay if it doesn't exist
 	if not has_node("fade_overlay"):
 		var overlay = ColorRect.new()
