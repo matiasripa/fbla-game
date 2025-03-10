@@ -82,14 +82,14 @@ var events_types = [{
 	"no_effect": true#spawns event card
 },
 {
-	"messege": "placeholder",
+	"messege": "placeholder",#bad product
 	"ok_messege":"ok(true)",
 	"ok_effects": true,
 	"effect": [-5,-3,5,-10],# [money, iron, reputation, co2]
 	"no_messege": "no(false)",
 	"no_effect": false
 },{
-	"messege": "placeholder2",
+	"messege": "placeholder2",#deforestation
 	"ok_messege":"ok(false)",
 	"ok_effects": false,
 	"effect": [-5,-3,5,-10],# [money, iron, reputation, co2]
