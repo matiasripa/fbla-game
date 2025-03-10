@@ -76,10 +76,10 @@ var events_types = [{
 	#this is for acid rain
 	"messege": "the burning of coal is starting to cause acid rain,what should you do to stop it ",
 	"ok_messege":"stop coal production",
-	"ok_effects": false,
+	"ok_effects": false,#activates effect
 	"effect": [-5,-3,5,-10],# [money, iron, reputation, co2]
 	"no_messege": "keep producing coal",
-	"no_effect": true
+	"no_effect": true#spawns event card
 },
 {
 	"messege": "placeholder",
@@ -88,6 +88,13 @@ var events_types = [{
 	"effect": [-5,-3,5,-10],# [money, iron, reputation, co2]
 	"no_messege": "no(false)",
 	"no_effect": false
+},{
+	"messege": "placeholder2",
+	"ok_messege":"ok(false)",
+	"ok_effects": false,
+	"effect": [-5,-3,5,-10],# [money, iron, reputation, co2]
+	"no_messege": "no(true)",
+	"no_effect": true
 }
 ]
 var which_event
@@ -400,6 +407,7 @@ func _on_assets_transfercard(card: Variant) -> void:
 	withdraw.set_new_card(card)
 
 # Handle event card signal
+#IT WORKS SO DONT TOUCH IT
 func _on_events_eventcard(eventstate: Variant, event_input: int) -> void:
 	if event_input == 1:  # User accepted the event
 		# Set the current event type in the events field
