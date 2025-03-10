@@ -16,7 +16,7 @@ extends MarginContainer
 var cardResource = preload("res://example/card/card.tscn")  # Card scene to instantiate
 signal transfercard(card)  # Signal emitted when card transfers to another field
 signal eventcard(eventstate)  # Signal emitted for event cards
-var wichevent = 0  # Current event type
+
 
 func _ready():
 	$Label.text = name  # Set field label to match node name
@@ -85,10 +85,11 @@ func _on_button_pressed() -> void:
 	set_new_card(card)
 
 # Setup event cards
-func event_setup():
+func event_setup(event):
+	
 	var card = cardResource.instantiate()
 	card.if_event = true  # Mark this as an event card
-	card.wichevent = wichevent  # Set which event this is
+	card.wichevent = event  # Set which event this is
 	cards_holder.add_child(card)
 	
 	# Set the home_field before calling set_new_card to ensure proper shadow handling
@@ -105,7 +106,8 @@ func event_setup():
 func end_turn():
 	var active_cards = cards_holder.get_children()  # Get array of cards
 	if active_cards.size() == 0:
-		print("nothing in "+ name)
+		pass
+		#print("nothing in "+ name)
 	for cards in active_cards:
 		print(cards.name)
 		if cards.has_method("turns"):

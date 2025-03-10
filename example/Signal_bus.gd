@@ -70,8 +70,26 @@ const LOW_MONEY = 10
 const LOW_REPUTATION = 10
 const HIGH_CO2 = 70
 const LOW_IRON = 10
-#here are the different events,this is for text purposes
-var events_types = ["event1","event2","event3"]
+#here are the different events
+#if it gives false,it gives you resources inmedietly,if true it gives an event card
+var events_types = [{
+	#this is for acid rain
+	"messege": "the burning of coal is starting to cause acid rain,what should you do to stop it ",
+	"ok_messege":"stop coal production",
+	"ok_effects": false,
+	"effect": [-5,-3,5,-10],# [money, iron, reputation, co2]
+	"no_messege": "keep producing coal",
+	"no_effect": true
+},
+{
+	"messege": "placeholder",
+	"ok_messege":"ok(true)",
+	"ok_effects": true,
+	"effect": [-5,-3,5,-10],# [money, iron, reputation, co2]
+	"no_messege": "no(false)",
+	"no_effect": false
+}
+]
 var which_event
 #-1 for unselected, 0 for no and 1 for yes
 var event_text_option_selected = -1 
@@ -179,7 +197,7 @@ func end_turn():
 		update_all_labels()
 		if current_turn == 10:
 			which_event = randi() % events_types.size()
-			event_text("test",events_types[0])
+			event_text(which_event)
 
 # Check if we need to transition to a new factory background
 func check_factory_transition():
@@ -304,10 +322,11 @@ func show_game_over(message: String):
 	
 	# Remove the current scene
 	queue_free()
-func event_text(messege: String,event : String):
+func event_text(event : int):
 	var event_dialogue = AcceptDialog.new()
-	event_dialogue.dialog_text = messege
-	event_dialogue.add_cancel_button("no")
+	event_dialogue.dialog_text = events_types[event]["messege"]
+	event_dialogue.ok_button_text = events_types[event]["ok_messege"]
+	event_dialogue.add_cancel_button(events_types[event]["no_messege"])
 	add_child(event_dialogue)
 	event_dialogue.popup_centered()
 	event_dialogue.connect("confirmed", on_event_accept)
@@ -384,8 +403,22 @@ func _on_assets_transfercard(card: Variant) -> void:
 func _on_events_eventcard(eventstate: Variant, event_input: int) -> void:
 	if event_input == 1:  # User accepted the event
 		# Set the current event type in the events field
-		events.wichevent = which_event  
-		events.event_setup()  # Create the event card
+		if events_types[which_event]["ok_effects"] == true:
+			events.event_setup(which_event)  # Create the event card
+		else:#[money, iron, reputation, co2]
+			money += events_types[which_event]["effect"][0]
+			iron += events_types[which_event]["effect"][1]
+			reputation += events_types[which_event]["effect"][2]
+			co2 += events_types[which_event]["effect"][3]
+			update_all_labels()
 	elif event_input == 0:  # User declined the event
 		# Handle declined event (maybe apply a different penalty?)
+		if events_types[which_event]["no_effect"] == true:
+			events.event_setup(which_event) 
+		else:#[money, iron, reputation, co2]
+			money += events_types[which_event]["effect"][0]
+			iron += events_types[which_event]["effect"][1]
+			reputation += events_types[which_event]["effect"][2]
+			co2 += events_types[which_event]["effect"][3]
+			update_all_labels()
 		pass

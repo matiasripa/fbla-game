@@ -456,7 +456,7 @@ func _on_mouse_entered():
 			create_zoom_card()
 		
 		# Different hover effects based on field type
-		if !home_field.iswithdraw and !home_field.isasset:
+		if !home_field.iswithdraw and !home_field.isasset and !home_field.isevent:
 			state_machine.on_mouse_entered()
 			
 			# Don't show shadow for event cards in the Events field
