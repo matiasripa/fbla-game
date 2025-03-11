@@ -54,9 +54,9 @@ const MAX_TURNS = 30
 
 # Game resources
 var money: int = 50
-var co2: int = 30
-var iron: int = 25
-var reputation: int = 50
+var co2: int = 0
+var iron: int = 100
+var reputation: int = 60
 var current_turn: int = 1
 
 # Win/loss thresholds - UPDATED
