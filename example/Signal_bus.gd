@@ -116,7 +116,7 @@ func _ready():
 	process_priority = -1  # Ensure this runs before other nodes
 
 	#the background music
-	bg_music.stream = load("res://example/BackgroundMusic.wav")
+	bg_music.stream = load("res://example/field/Ian Post - Breaking Point.mp3")
 	bg_music.autoplay = true
 	add_child(bg_music)
 	

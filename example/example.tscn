@@ -196,6 +196,7 @@ text = "Quit"
 script = ExtResource("7_oarpl")
 
 [node name="AudioStreamPlayer" parent="." instance=ExtResource("5_akeb5")]
+volume_db = 24.0
 
 [connection signal="transfercard" from="Signalbus/CanvasLayer/Assets" to="Signalbus" method="_on_assets_transfercard"]
 [connection signal="transfercard" from="Signalbus/CanvasLayer/destroy" to="Signalbus" method="_on_assets_transfercard"]

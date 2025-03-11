@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cgqvo8j84gbxs"
+path="res://.godot/imported/Ian Post - Breaking Point.mp3-7f5493b67724356cb2d8d77aa5e61a0a.mp3str"
+
+[deps]
+
+source_file="res://example/field/Ian Post - Breaking Point.mp3"
+dest_files=["res://.godot/imported/Ian Post - Breaking Point.mp3-7f5493b67724356cb2d8d77aa5e61a0a.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
