@@ -54,8 +54,8 @@ const MAX_TURNS = 30
 
 # Game resources
 var money: int = 50
-var co2: int = 0
-var iron: int = 100
+var co2: int = 30
+var iron: int = 25
 var reputation: int = 50
 var current_turn: int = 1
 
@@ -74,26 +74,35 @@ const LOW_IRON = 10
 #if it gives false,it gives you resources inmedietly,if true it gives an event card
 var events_types = [{
 	#this is for acid rain
-	"messege": "the burning of coal is starting to cause acid rain,what should you do to stop it ",
-	"ok_messege":"stop coal production",
+	"messege": " A massive underground mineral deposit could skyrocket your profits. 
+	Some experts warn that drilling might release harmful gases, but there’s no solid proof yet.
+	 Others say it’s just an overreaction.
+	Do you start mining? ",
+	"ok_messege":"stop the mining",
 	"ok_effects": false,#activates effect
-	"effect": [-5,-3,5,-10],# [money, iron, reputation, co2]
-	"no_messege": "keep producing coal",
+	"effect": [+5,10,0,-10],# [money, iron, reputation, co2]
+	"no_messege": "yes start",
 	"no_effect": true#spawns event card
 },
 {
-	"messege": "placeholder",#bad product
-	"ok_messege":"ok(true)",
+	"messege": "Your company’s latest product could revolutionize the market!
+	 Testing isn’t fully complete, but no major issues have been found so far.
+	 If you launch now, you’ll beat the competition and secure massive profits. 
+	Do you go for it?",#bad product
+	"ok_messege":"sure go for it ",
 	"ok_effects": true,
-	"effect": [-5,-3,5,-10],# [money, iron, reputation, co2]
-	"no_messege": "no(false)",
+	"effect": [-10,-6,5,0],# [money, iron, reputation, co2]
+	"no_messege": "do not go for it!",
 	"no_effect": false
 },{
-	"messege": "placeholder2",#deforestation
-	"ok_messege":"ok(false)",
+	"messege": " A foreign buyer is offering a fortune for high-quality lumber.
+	The forest will take years to recover, but new trees will grow eventually.
+	Plus, if you don’t take the deal, someone else will.
+	Do you go ahead with large-scale logging?",#deforestation
+	"ok_messege":"do not take it",
 	"ok_effects": false,
-	"effect": [-5,-3,5,-10],# [money, iron, reputation, co2]
-	"no_messege": "no(true)",
+	"effect": [-5,-2,5,0],# [money, iron, reputation, co2]
+	"no_messege": "take it ",
 	"no_effect": true
 }
 ]
@@ -407,7 +416,7 @@ func _on_assets_transfercard(card: Variant) -> void:
 	withdraw.set_new_card(card)
 
 # Handle event card signal
-#IT WORKS SO DONT TOUCH IT
+#IT WORKS SO DONT TOUCH IT (Ahmad: sure i will not <3)
 func _on_events_eventcard(eventstate: Variant, event_input: int) -> void:
 	if event_input == 1:  # User accepted the event
 		# Set the current event type in the events field

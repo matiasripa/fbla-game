@@ -15,6 +15,7 @@ script = ExtResource("1_fpw72")
 
 [node name="Win_SFX" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("2_5k8lw")
+volume_db = 15.0
 
 [node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 2
@@ -78,3 +79,4 @@ text = "Exit"
 
 [node name="Lose_SFX" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_kd4t7")
+volume_db = 24.0
