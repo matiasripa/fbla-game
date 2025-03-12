@@ -117,7 +117,7 @@ func _ready():
 
 	#the background music
 	bg_music.stream = load("res://example/field/Ian Post - Breaking Point.mp3")
-	bg_music.autoplay = true
+	bg_music.autoplayloop = true
 	add_child(bg_music)
 	
 	# Create the fade overlay if it doesn't exist
@@ -211,7 +211,7 @@ func end_turn():
 		
 		# Update UI
 		update_all_labels()
-		if current_turn == 10:
+		if current_turn == 5 || current_turn == 10 || current_turn == 20:
 			which_event = randi() % events_types.size()
 			event_text(which_event)
 
