@@ -117,7 +117,7 @@ func _ready():
 
 	#the background music
 	bg_music.stream = load("res://example/field/Ian Post - Breaking Point.mp3")
-	bg_music.autoplayloop = true
+	bg_music.autoplay = true
 	add_child(bg_music)
 	
 	# Create the fade overlay if it doesn't exist
