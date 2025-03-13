@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://buh3412b0qtpp"]
+[gd_scene load_steps=11 format=3 uid="uid://buh3412b0qtpp"]
 
 [ext_resource type="PackedScene" uid="uid://biim2lxri0akl" path="res://example/field/field.tscn" id="1_fkhir"]
 [ext_resource type="Script" path="res://example/Signal_bus.gd" id="1_swl7a"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://kmkudg1ghyt8" path="res://Picsart_25-03-06_20-45-14-524.png" id="5_0btdp"]
 [ext_resource type="PackedScene" uid="uid://b0u4pf74opd1e" path="res://audio_stream_player.tscn" id="5_akeb5"]
 [ext_resource type="Script" path="res://example/quit_button.gd" id="7_oarpl"]
+[ext_resource type="AudioStream" uid="uid://cgqvo8j84gbxs" path="res://example/field/Ian Post - Breaking Point.mp3" id="8_h1occ"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3qu4y"]
 shader = ExtResource("4_h1m6o")
@@ -195,8 +196,12 @@ offset_bottom = 626.0
 text = "Quit"
 script = ExtResource("7_oarpl")
 
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Signalbus"]
+stream = ExtResource("8_h1occ")
+autoplay = true
+
 [node name="AudioStreamPlayer" parent="." instance=ExtResource("5_akeb5")]
-volume_db = 24.0
+volume_db = 10.0
 
 [connection signal="transfercard" from="Signalbus/CanvasLayer/Assets" to="Signalbus" method="_on_assets_transfercard"]
 [connection signal="transfercard" from="Signalbus/CanvasLayer/destroy" to="Signalbus" method="_on_assets_transfercard"]
