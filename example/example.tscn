@@ -38,15 +38,14 @@ color = Color(1, 1, 1, 0)
 [node name="CanvasLayer" type="CanvasLayer" parent="Signalbus" groups=["fields"]]
 
 [node name="hand" parent="Signalbus/CanvasLayer" instance=ExtResource("1_fkhir")]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -528.065
-offset_top = -266.175
-offset_right = -107.065
-offset_bottom = -116.175
+anchor_left = 0.0146181
+anchor_top = 0.50921
+anchor_right = 0.380958
+anchor_bottom = 0.737667
+offset_left = -3.84
+offset_top = 18.032
+offset_right = -3.86401
+offset_bottom = 17.992
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -59,22 +58,23 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -528.0
-offset_top = -628.0
-offset_right = -107.0
-offset_bottom = -478.0
+offset_left = -569.0
+offset_top = -645.0
+offset_right = -148.0
+offset_bottom = -495.0
 grow_horizontal = 2
 grow_vertical = 0
 isasset = true
 
 [node name="destroy" parent="Signalbus/CanvasLayer" instance=ExtResource("1_fkhir")]
-anchor_left = 0.698351
-anchor_top = 0.566358
-anchor_right = 0.698351
-anchor_bottom = 0.566358
-offset_left = -210.5
-offset_top = -150.0
-offset_right = 210.5
+anchor_left = 0.516
+anchor_top = 0.305
+anchor_right = 0.859
+anchor_bottom = 0.5
+offset_left = -0.432007
+offset_top = -22.64
+offset_right = 25.4319
+offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 0
 isdestroy = true
@@ -89,15 +89,27 @@ layout_mode = 2
 texture = ExtResource("5_0btdp")
 expand_mode = 1
 
+[node name="EventField" parent="Signalbus/CanvasLayer" instance=ExtResource("1_fkhir")]
+anchor_left = 0.778212
+anchor_top = 0.522531
+anchor_right = 0.778212
+anchor_bottom = 0.519444
+offset_left = -266.5
+offset_top = -316.6
+offset_right = 154.5
+offset_bottom = -166.6
+grow_horizontal = 2
+grow_vertical = 0
+
 [node name="Withdraw" parent="Signalbus/CanvasLayer" instance=ExtResource("1_fkhir")]
 anchor_left = 0.5
 anchor_top = 0.954
 anchor_right = 0.5
 anchor_bottom = 0.964
-offset_left = -526.0
-offset_top = -424.192
-offset_right = -106.0
-offset_bottom = -282.672
+offset_left = -566.0
+offset_top = -448.192
+offset_right = -146.0
+offset_bottom = -306.672
 iswithdraw = true
 
 [node name="DrawCards" type="Button" parent="Signalbus/CanvasLayer"]
@@ -106,10 +118,10 @@ anchor_left = 0.597
 anchor_top = 1.0
 anchor_right = 0.601
 anchor_bottom = 1.0
-offset_left = -149.744
-offset_top = -193.0
-offset_right = -68.352
-offset_bottom = -162.0
+offset_left = -238.744
+offset_top = -231.0
+offset_right = -155.352
+offset_bottom = -200.0
 text = "Draw card"
 script = ExtResource("3_aopf2")
 
@@ -119,31 +131,35 @@ anchor_left = 0.583
 anchor_top = 1.0
 anchor_right = 0.583
 anchor_bottom = 1.0
-offset_left = -132.616
-offset_top = -236.0
-offset_right = -48.616
-offset_bottom = -205.0
+offset_left = -220.616
+offset_top = -268.0
+offset_right = -136.616
+offset_bottom = -237.0
 text = "End turn"
 script = ExtResource("4_d401k")
 
 [node name="Events" parent="Signalbus/CanvasLayer" instance=ExtResource("1_fkhir")]
-offset_left = 589.0
-offset_top = 21.0
-offset_right = 589.0
-offset_bottom = 21.0
+anchor_left = 0.876
+anchor_top = 0.032
+anchor_right = 0.876
+anchor_bottom = 0.032
+offset_left = -420.152
+offset_top = 0.264
+offset_right = -0.152405
+offset_bottom = 148.264
 isevent = true
 
 [node name="ActionLabel" type="Label" parent="Signalbus/CanvasLayer"]
-offset_left = 653.0
-offset_top = 461.0
-offset_right = 794.0
-offset_bottom = 484.0
-text = "Actions remaining: 2"
+offset_left = 434.0
+offset_top = 450.0
+offset_right = 592.0
+offset_bottom = 498.0
+text = "Action remaining: 2"
 
 [node name="ResourcePanel" type="Panel" parent="Signalbus/CanvasLayer"]
-offset_left = 961.0
+offset_left = 958.0
 offset_top = 408.0
-offset_right = 1125.0
+offset_right = 1122.0
 offset_bottom = 580.0
 
 [node name="TextureRect" type="TextureRect" parent="Signalbus/CanvasLayer/ResourcePanel"]

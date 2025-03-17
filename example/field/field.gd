@@ -18,7 +18,37 @@ signal transfercard(card)  # Signal emitted when card transfers to another field
 signal eventcard(eventstate)  # Signal emitted for event cards
 
 
+func can_accept_card(card):
+	var signalbus = get_node("/root/Game/Signalbus")
+	return signalbus.can_interact_with_card(card, self)
+# In your field.gd script, ensure the accept_card function works properly
+	if card.get_parent():
+		card.get_parent().remove_child(card)
+	
+	# Add the card to this field's cards_holder
+	cards_holder.add_child(card)
+	
+	# Adjust card properties based on field type
+	if isevent and card.has_method("set_meta"):
+		card.set_meta("is_event_card", true)
+	elif card.get("is_event_card") != null:
+		card.is_event_card = true
+	
+	# Emit signal that the card was accepted (if needed)
+	if has_signal("card_accepted"):
+		emit_signal("card_accepted", card)
+	
+
+
 func _ready():
+	
+	
+	# For regular cards
+	# If the property doesn't exist yet, initialize it
+	if not has_meta("is_event_card"):
+		set_meta("is_event_card", false)  # Default to false for regular cards
+
+	
 	$Label.text = name  # Set field label to match node name
 	
 	# Enable fire border if this is the destroy field
