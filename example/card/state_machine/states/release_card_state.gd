@@ -14,7 +14,7 @@ func _enter():
 	else:
 		var new_field = field_areas[0].get_parent() as Field
 		
-		if new_field.name == "destroy":
+		if new_field.isdestroy:
 			card.destroy()
 			return
 		

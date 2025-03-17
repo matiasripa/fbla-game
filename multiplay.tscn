@@ -1,0 +1,254 @@
+[gd_scene load_steps=16 format=3 uid="uid://chgg20q8ljjwj"]
+
+[ext_resource type="Script" path="res://muliplay bus.gd" id="1_gfgb8"]
+[ext_resource type="PackedScene" uid="uid://biim2lxri0akl" path="res://example/field/field.tscn" id="2_c65yl"]
+[ext_resource type="Script" path="res://example/handmult.gd" id="3_fhggc"]
+[ext_resource type="Shader" path="res://example/fire.gdshader" id="3_w7og7"]
+[ext_resource type="Script" path="res://example/fieldmult.gd" id="4_10fk7"]
+[ext_resource type="Texture2D" uid="uid://kmkudg1ghyt8" path="res://Picsart_25-03-06_20-45-14-524.png" id="4_r2dvf"]
+[ext_resource type="Script" path="res://example/fie.gd" id="5_gj12y"]
+[ext_resource type="Script" path="res://example/end_turn.gd" id="6_quu3w"]
+[ext_resource type="Script" path="res://example/quit_button.gd" id="7_ye0dn"]
+[ext_resource type="Script" path="res://draw_cards.gd" id="8_i5sbr"]
+[ext_resource type="AudioStream" uid="uid://cgqvo8j84gbxs" path="res://example/field/Ian Post - Breaking Point.mp3" id="8_ydnj2"]
+[ext_resource type="Script" path="res://p_2_events_field.gd" id="12_7rog7"]
+[ext_resource type="Script" path="res://example/field/panel.gd" id="12_jjwbm"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wcu04"]
+shader = ExtResource("3_w7og7")
+shader_parameter/fireMovement = Vector2(0.01, -0.05)
+shader_parameter/distortionMovement = Vector2(-0.01, -0.03)
+shader_parameter/normalStrength = 10.0
+shader_parameter/distortionStrength = 0.001
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ht8hv"]
+size = Vector2(210, 148)
+
+[node name="Node" type="Node"]
+
+[node name="Signalbus" type="Node" parent="."]
+script = ExtResource("1_gfgb8")
+
+[node name="background" type="TextureRect" parent="Signalbus"]
+show_behind_parent = true
+offset_top = -3.0
+offset_right = 1149.0
+offset_bottom = 650.0
+expand_mode = 3
+
+[node name="fade_overlay" type="ColorRect" parent="Signalbus"]
+z_index = 100
+offset_right = 1200.0
+offset_bottom = 700.0
+color = Color(1, 1, 1, 0)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Signalbus" groups=["fields"]]
+
+[node name="hand" parent="Signalbus/CanvasLayer" instance=ExtResource("2_c65yl")]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -528.065
+offset_top = -266.175
+offset_right = -107.065
+offset_bottom = -116.175
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("3_fhggc")
+
+[node name="Label" parent="Signalbus/CanvasLayer/hand" index="1"]
+text = "hand"
+
+[node name="Assets" parent="Signalbus/CanvasLayer" instance=ExtResource("2_c65yl")]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -528.0
+offset_top = -628.0
+offset_right = -107.0
+offset_bottom = -478.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("4_10fk7")
+isasset = true
+
+[node name="destroy" parent="Signalbus/CanvasLayer" instance=ExtResource("2_c65yl")]
+anchor_left = 0.461
+anchor_top = 0.956
+anchor_right = 0.461
+anchor_bottom = 0.956
+offset_left = 62.9283
+offset_top = -402.488
+offset_right = 483.928
+offset_bottom = -252.488
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("5_gj12y")
+isdestroy = true
+
+[node name="ColorRect" type="ColorRect" parent="Signalbus/CanvasLayer/destroy"]
+show_behind_parent = true
+material = SubResource("ShaderMaterial_wcu04")
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Signalbus/CanvasLayer/destroy"]
+layout_mode = 2
+texture = ExtResource("4_r2dvf")
+expand_mode = 1
+
+[node name="Withdraw" parent="Signalbus/CanvasLayer" instance=ExtResource("2_c65yl")]
+anchor_left = 0.5
+anchor_top = 0.954
+anchor_right = 0.5
+anchor_bottom = 0.964
+offset_left = -526.0
+offset_top = -424.192
+offset_right = -106.0
+offset_bottom = -282.672
+iswithdraw = true
+
+[node name="DrawCards" type="Button" parent="Signalbus/CanvasLayer"]
+anchors_preset = -1
+anchor_left = 0.597
+anchor_top = 1.0
+anchor_right = 0.601
+anchor_bottom = 1.0
+offset_left = -149.744
+offset_top = -193.0
+offset_right = -68.352
+offset_bottom = -162.0
+text = "Draw card"
+script = ExtResource("8_i5sbr")
+
+[node name="end turn" type="Button" parent="Signalbus/CanvasLayer"]
+anchors_preset = -1
+anchor_left = 0.583
+anchor_top = 1.0
+anchor_right = 0.583
+anchor_bottom = 1.0
+offset_left = -132.616
+offset_top = -236.0
+offset_right = -48.616
+offset_bottom = -205.0
+text = "End turn"
+script = ExtResource("6_quu3w")
+
+[node name="ActionLabel" type="Label" parent="Signalbus/CanvasLayer"]
+offset_left = 653.0
+offset_top = 461.0
+offset_right = 794.0
+offset_bottom = 484.0
+text = "Actions remaining: 2"
+
+[node name="ResourcePanel" type="Panel" parent="Signalbus/CanvasLayer"]
+offset_left = 961.0
+offset_top = 408.0
+offset_right = 1125.0
+offset_bottom = 580.0
+
+[node name="TextureRect" type="TextureRect" parent="Signalbus/CanvasLayer/ResourcePanel"]
+layout_mode = 0
+offset_left = 60.0
+offset_right = 231.0
+offset_bottom = 169.0
+
+[node name="MoneyLabel" type="Label" parent="Signalbus/CanvasLayer"]
+offset_left = 970.0
+offset_top = 411.0
+offset_right = 1060.0
+offset_bottom = 434.0
+text = "Money"
+
+[node name="CO2Label" type="Label" parent="Signalbus/CanvasLayer"]
+offset_left = 973.0
+offset_top = 460.0
+offset_right = 1063.0
+offset_bottom = 483.0
+text = "co2"
+
+[node name="IronLabel" type="Label" parent="Signalbus/CanvasLayer"]
+offset_left = 980.0
+offset_top = 494.0
+offset_right = 1070.0
+offset_bottom = 517.0
+text = "iron "
+
+[node name="ReputationLabel" type="Label" parent="Signalbus/CanvasLayer"]
+offset_left = 965.0
+offset_top = 529.0
+offset_right = 1055.0
+offset_bottom = 552.0
+text = "ReputationLabel"
+
+[node name="TurnCounterLabel" type="Label" parent="Signalbus/CanvasLayer"]
+top_level = true
+offset_left = 1016.0
+offset_top = 8.0
+offset_right = 1144.0
+offset_bottom = 31.0
+text = "count :"
+
+[node name="QuitButton" type="Button" parent="Signalbus/CanvasLayer"]
+offset_left = 25.0
+offset_top = 595.0
+offset_right = 124.0
+offset_bottom = 626.0
+text = "Quit"
+script = ExtResource("7_ye0dn")
+
+[node name="P2EventsField" type="MarginContainer" parent="Signalbus/CanvasLayer"]
+anchors_preset = -1
+anchor_left = 0.49
+anchor_top = 0.074
+anchor_right = 0.854
+anchor_bottom = 0.302
+offset_left = 41.52
+offset_top = -8.952
+offset_right = 45.192
+offset_bottom = -10.696
+script = ExtResource("12_7rog7")
+
+[node name="Panel" type="Panel" parent="Signalbus/CanvasLayer/P2EventsField"]
+modulate = Color(1, 1, 1, 0.278431)
+layout_mode = 2
+script = ExtResource("12_jjwbm")
+
+[node name="Label" type="Label" parent="Signalbus/CanvasLayer/P2EventsField"]
+layout_mode = 2
+text = "p2
+"
+
+[node name="CardsHolder" type="HBoxContainer" parent="Signalbus/CanvasLayer/P2EventsField"]
+layout_mode = 2
+alignment = 1
+
+[node name="CardDropAreaRight" type="Area2D" parent="Signalbus/CanvasLayer/P2EventsField"]
+position = Vector2(210, 0)
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Signalbus/CanvasLayer/P2EventsField/CardDropAreaRight"]
+position = Vector2(106, 74)
+shape = SubResource("RectangleShape2D_ht8hv")
+
+[node name="CardDropAreaLeft" type="Area2D" parent="Signalbus/CanvasLayer/P2EventsField"]
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Signalbus/CanvasLayer/P2EventsField/CardDropAreaLeft"]
+position = Vector2(106, 74)
+shape = SubResource("RectangleShape2D_ht8hv")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Signalbus"]
+stream = ExtResource("8_ydnj2")
+autoplay = true
+
+[connection signal="transfercard" from="Signalbus/CanvasLayer/Assets" to="Signalbus" method="_on_assets_transfercard"]
+[connection signal="transfercard" from="Signalbus/CanvasLayer/destroy" to="Signalbus" method="_on_assets_transfercard"]
+[connection signal="pressed" from="Signalbus/CanvasLayer/DrawCards" to="Signalbus/CanvasLayer/hand" method="_on_button_pressed"]
+[connection signal="pressed" from="Signalbus/CanvasLayer/end turn" to="Signalbus" method="_on_end_turn_pressed"]
+[connection signal="pressed" from="Signalbus/CanvasLayer/end turn" to="Signalbus/CanvasLayer/end turn" method="_on_pressed"]
+
+[editable path="Signalbus/CanvasLayer/hand"]
