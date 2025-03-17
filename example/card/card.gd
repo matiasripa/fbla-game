@@ -138,8 +138,8 @@ func update_highlight_state(is_clicked: bool):
 
 
 func create_zoom_card():
-	# Allow zoom for cards in both hand and event fields
-	if home_field and (home_field.name == "hand" || home_field.name == "Events" || home_field.name == "Assets" || home_field.name == "Withdraw") and !zoom_active and state_machine.current_state.name != "Drag":
+	# Allow zoom for cards in hand, event, assets, withdraw, and now EventField
+	if home_field and (home_field.name == "hand" || home_field.name == "Events" || home_field.name == "Assets" || home_field.name == "Withdraw" || home_field.name == "EventField") and !zoom_active and state_machine.current_state.name != "Drag":
 		# Create a duplicate of this card for zooming
 		zoom_card = duplicate()
 		
@@ -449,10 +449,11 @@ func turns():
 
 
 # Mouse enter hover effect
+# Mouse enter hover effect
 func _on_mouse_entered():
 	if home_field:
-		# Show zoom card for hand and Events fields, but not in Drag state
-		if (home_field.name == "hand" || home_field.name == "Events") and state_machine.current_state.name != "Drag":
+		# Show zoom card for hand, Events, and now EventField fields, but not in Drag state
+		if (home_field.name == "hand" || home_field.name == "Events" || home_field.name == "EventField") and state_machine.current_state.name != "Drag":
 			create_zoom_card()
 		
 		# Different hover effects based on field type
@@ -474,7 +475,6 @@ func _on_mouse_entered():
 		# For withdraw field, only show minimal hover effect for right-click functionality
 		elif home_field.iswithdraw:
 			state_machine.on_mouse_entered()
-
 # Mouse exit effect
 func _on_mouse_exited():
 	# Remove zoom card when mouse exits the card

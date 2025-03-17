@@ -68,20 +68,20 @@ text = ">"
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_hb4uw")
 theme_override_font_sizes/font_size = 33
-text = "Options"
+text = "How to Play"
 
-[node name="CenterContainer3" type="CenterContainer" parent="CenterContainer/VBoxContainer/CenterContainer2/VBoxContainer"]
+[node name="CenterContainer4" type="CenterContainer" parent="CenterContainer/VBoxContainer/CenterContainer2/VBoxContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer/CenterContainer2/VBoxContainer/CenterContainer3"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer/CenterContainer2/VBoxContainer/CenterContainer4"]
 layout_mode = 2
 
-[node name="Selector" type="Label" parent="CenterContainer/VBoxContainer/CenterContainer2/VBoxContainer/CenterContainer3/HBoxContainer"]
+[node name="Selector" type="Label" parent="CenterContainer/VBoxContainer/CenterContainer2/VBoxContainer/CenterContainer4/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 text = ">"
 
-[node name="OptionName" type="Label" parent="CenterContainer/VBoxContainer/CenterContainer2/VBoxContainer/CenterContainer3/HBoxContainer"]
+[node name="OptionName" type="Label" parent="CenterContainer/VBoxContainer/CenterContainer2/VBoxContainer/CenterContainer4/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.909804, 0, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -89,3 +89,48 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("2_hb4uw")
 theme_override_font_sizes/font_size = 40
 text = "Exit"
+
+[node name="HowToPlayPopup" type="PopupPanel" parent="."]
+size = Vector2i(800, 400)
+
+[node name="MarginContainer" type="MarginContainer" parent="HowToPlayPopup"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 796.0
+offset_bottom = 396.0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HowToPlayPopup/MarginContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="HowToPlayPopup/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.698039, 0, 1)
+theme_override_fonts/font = ExtResource("2_hb4uw")
+theme_override_font_sizes/font_size = 30
+text = "How to Play"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="HowToPlayPopup/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Instructions" type="RichTextLabel" parent="HowToPlayPopup/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/normal_font = ExtResource("2_hb4uw")
+theme_override_font_sizes/normal_font_size = 18
+text = "Goal: Maximize your Reputation, Profit, and Sustainability while minimizing CO₂ Emissions. The game ends after a set number of turns or when one player reaches a specified goal.
+
+Card Types: Each turn, players draw 5 cards and place them in the Hand Field. Cards can then be moved to the Asset Field, where their Positive Turns take effect. Once the Positive Turns expire, the card moves to the Withdraw Field, triggering its Negative Turns.
+
+End Turn Button: Each press of the End Turn button reduces 1 turn from every card's active effect."
+
+[node name="CloseButton" type="Button" parent="HowToPlayPopup/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_hb4uw")
+theme_override_font_sizes/font_size = 20
+text = "Close"

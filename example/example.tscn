@@ -91,7 +91,7 @@ expand_mode = 1
 
 [node name="EventField" parent="Signalbus/CanvasLayer" instance=ExtResource("1_fkhir")]
 anchor_left = 0.778212
-anchor_top = 0.522531
+anchor_top = 0.519444
 anchor_right = 0.778212
 anchor_bottom = 0.519444
 offset_left = -266.5
