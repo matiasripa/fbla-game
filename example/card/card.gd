@@ -453,7 +453,7 @@ func turns():
 func _on_mouse_entered():
 	if home_field:
 		# Show zoom card for hand, Events, and now EventField fields, but not in Drag state
-		if (home_field.name == "hand" || home_field.name == "Events" || home_field.name == "EventField") and state_machine.current_state.name != "Drag":
+		if (home_field.name == "hand" || home_field.name == "Events" || home_field.name == "EventField" || home_field.name == "Assets" || home_field.name == "Withdraw") and state_machine.current_state.name != "Drag":
 			create_zoom_card()
 		
 		# Different hover effects based on field type
