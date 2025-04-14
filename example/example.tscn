@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://buh3412b0qtpp"]
+[gd_scene load_steps=15 format=3 uid="uid://buh3412b0qtpp"]
 
 [ext_resource type="PackedScene" uid="uid://biim2lxri0akl" path="res://example/field/field.tscn" id="1_fkhir"]
 [ext_resource type="Script" path="res://example/Signal_bus.gd" id="1_swl7a"]
@@ -7,8 +7,12 @@
 [ext_resource type="Shader" path="res://example/fire.gdshader" id="4_h1m6o"]
 [ext_resource type="Texture2D" uid="uid://kmkudg1ghyt8" path="res://Picsart_25-03-06_20-45-14-524.png" id="5_0btdp"]
 [ext_resource type="PackedScene" uid="uid://b0u4pf74opd1e" path="res://audio_stream_player.tscn" id="5_akeb5"]
+[ext_resource type="Script" path="res://moneyLabel.gd" id="7_jimci"]
 [ext_resource type="Script" path="res://example/quit_button.gd" id="7_oarpl"]
 [ext_resource type="AudioStream" uid="uid://cgqvo8j84gbxs" path="res://example/field/Ian Post - Breaking Point.mp3" id="8_h1occ"]
+[ext_resource type="Script" path="res://co2Label.gd" id="8_x8uvu"]
+[ext_resource type="Script" path="res://ironLabel.gd" id="9_td7mb"]
+[ext_resource type="Script" path="res://reputationLabel.gd" id="10_nu0o7"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3qu4y"]
 shader = ExtResource("4_h1m6o")
@@ -174,6 +178,7 @@ offset_top = 411.0
 offset_right = 1060.0
 offset_bottom = 434.0
 text = "Money"
+script = ExtResource("7_jimci")
 
 [node name="CO2Label" type="Label" parent="Signalbus/CanvasLayer"]
 offset_left = 973.0
@@ -181,6 +186,7 @@ offset_top = 460.0
 offset_right = 1063.0
 offset_bottom = 483.0
 text = "co2"
+script = ExtResource("8_x8uvu")
 
 [node name="IronLabel" type="Label" parent="Signalbus/CanvasLayer"]
 offset_left = 980.0
@@ -188,6 +194,7 @@ offset_top = 494.0
 offset_right = 1070.0
 offset_bottom = 517.0
 text = "iron "
+script = ExtResource("9_td7mb")
 
 [node name="ReputationLabel" type="Label" parent="Signalbus/CanvasLayer"]
 offset_left = 965.0
@@ -195,6 +202,7 @@ offset_top = 529.0
 offset_right = 1055.0
 offset_bottom = 552.0
 text = "ReputationLabel"
+script = ExtResource("10_nu0o7")
 
 [node name="TurnCounterLabel" type="Label" parent="Signalbus/CanvasLayer"]
 top_level = true

@@ -21,7 +21,6 @@ var cardResource = preload("res://example/card/card.tscn")
 # Preload the end screen scene
 var end_screen_scene = preload("res://end screen.tscn")
 
-
 # Background images - 15 factory images
 var factory_textures = [
 	preload("res://factory/fact1.png"),
@@ -58,10 +57,6 @@ const MAX_TURNS = 30
 
 
 # Game resources
-var money: int = 50
-var co2: int = 0
-var iron: int = 100
-var reputation: int = 60
 var current_turn: int = 1
 
 # Win/loss thresholds - UPDATED
@@ -514,10 +509,10 @@ func _on_event_accept(event_index):
 		event_field.event_setup(event_index)
 	else:
 		# Apply immediate effects [money, iron, reputation, co2]
-		money += events_types[event_index]["effect"][0]
-		iron += events_types[event_index]["effect"][1]
-		reputation += events_types[event_index]["effect"][2]
-		co2 += events_types[event_index]["effect"][3]
+		Global.money += events_types[event_index]["effect"][0]
+		Global.iron += events_types[event_index]["effect"][1]
+		Global.reputation += events_types[event_index]["effect"][2]
+		Global.co2 += events_types[event_index]["effect"][3]
 		update_all_labels()
 
 func _on_event_decline(event_index):
@@ -526,10 +521,10 @@ func _on_event_decline(event_index):
 		event_field.event_setup(event_index)
 	else:
 		# Apply immediate effects [money, iron, reputation, co2]
-		money += events_types[event_index]["effect"][0]
-		iron += events_types[event_index]["effect"][1]
-		reputation += events_types[event_index]["effect"][2]
-		co2 += events_types[event_index]["effect"][3]
+		Global.money += events_types[event_index]["effect"][0]
+		Global.iron += events_types[event_index]["effect"][1]
+		Global.reputation += events_types[event_index]["effect"][2]
+		Global.co2 += events_types[event_index]["effect"][3]
 		update_all_labels()
 
 
@@ -649,12 +644,12 @@ func apply_card_effects(card, is_positive: bool, is_event: bool):
 		effect = card.negeffect
 
 	# Effect format: [description, turns, money, iron, reputation, co2]
-	money += effect[2]
-	iron += effect[3]
-	reputation += effect[4]
-	co2 += effect[5]
-	if co2 <= 0:
-		co2 = 0
+	Global.money += effect[2]
+	Global.iron += effect[3]
+	Global.reputation += effect[4]
+	Global.co2 += effect[5]
+	if Global.co2 <= 0:
+		Global.co2 = 0
 
 # Check win/loss conditions - UPDATED
 func check_game_conditions():
@@ -663,32 +658,32 @@ func check_game_conditions():
 			show_game_over("Victory! You've successfully balanced resources!")
 		else:
 			show_game_over("Game Over! Failed to achieve balance after 30 turns.")
-	elif co2 >= LOSE_CO2_THRESHOLD:
+	elif Global.co2 >= LOSE_CO2_THRESHOLD:
 		show_game_over("Game Over! CO2 levels too high!")
 #	elif eventloss == true:
 #		show_game_over(event_loss_description)
-	elif money <= LOW_MONEY:
+	elif Global.money <= LOW_MONEY:
 		pass  # Event handling for low money
 
 # Check if win conditions are met - UPDATED
 func check_win_condition() -> bool:
-	return (money >= WIN_MONEY_THRESHOLD and 
-			reputation >= WIN_REPUTATION_THRESHOLD and 
-			co2 < LOSE_CO2_THRESHOLD and 
-			iron >= WIN_IRON_THRESHOLD)
+	return (Global.money >= WIN_MONEY_THRESHOLD and 
+			Global.reputation >= WIN_REPUTATION_THRESHOLD and 
+			Global.co2 < LOSE_CO2_THRESHOLD and 
+			Global.iron >= WIN_IRON_THRESHOLD)
 
 func show_game_over(message: String):
 	# Create an instance of the end screen
 	var end_screen = end_screen_scene.instantiate()
 	
 	# Set the game over reason based on updated conditions
-	if co2 >= LOSE_CO2_THRESHOLD:
+	if Global.co2 >= LOSE_CO2_THRESHOLD:
 		end_screen.game_over_reason = "co2"
-	elif money < WIN_MONEY_THRESHOLD:
+	elif Global.money < WIN_MONEY_THRESHOLD:
 		end_screen.game_over_reason = "money"
-	elif reputation < WIN_REPUTATION_THRESHOLD:
+	elif Global.reputation < WIN_REPUTATION_THRESHOLD:
 		end_screen.game_over_reason = "reputation"
-	elif iron < WIN_IRON_THRESHOLD:
+	elif Global.iron < WIN_IRON_THRESHOLD:
 		end_screen.game_over_reason = "money"  # Using money background for iron shortage
 	elif check_win_condition():
 		end_screen.game_over_reason = "victory"
@@ -728,41 +723,8 @@ func update_all_labels():
 		action_label.text = "Actions remaining: " + str(MAX_PLAYER2_ACTIONS_PER_TURN - player2_actions_this_turn)
 	else:
 		action_label.text = "Actions remaining: " + str(MAX_ACTIONS_PER_TURN - actions_this_turn)
-	# Money label
-	money_label.text = "Money: " + str(money)
-	if money >= 50:
-		money_label.add_theme_color_override("font_color", Color(0, 1, 0))  # Green
-	elif money >= 30:
-		money_label.add_theme_color_override("font_color", Color(1, 1, 0))  # Yellow
-	else:
-		money_label.add_theme_color_override("font_color", Color(1, 0, 0))  # Red
-
-	# CO2 label (inverted logic since higher CO2 is worse)
-	co2_label.text = "CO2: " + str(co2)
-	if co2 >= 50:
-		co2_label.add_theme_color_override("font_color", Color(1, 0, 0))  # Red
-	elif co2 >= 30:
-		co2_label.add_theme_color_override("font_color", Color(1, 1, 0))  # Yellow
-	else:
-		co2_label.add_theme_color_override("font_color", Color(0, 1, 0))  # Green
-
-	# Iron label
-	iron_label.text = "Iron: " + str(iron)
-	if iron >= 50:
-		iron_label.add_theme_color_override("font_color", Color(0, 1, 0))  # Green
-	elif iron >= 30:
-		iron_label.add_theme_color_override("font_color", Color(1, 1, 0))  # Yellow
-	else:
-		iron_label.add_theme_color_override("font_color", Color(1, 0, 0))  # Red
-
-	# Reputation label
-	reputation_label.text = "Reputation: " + str(reputation)
-	if reputation >= 50:
-		reputation_label.add_theme_color_override("font_color", Color(0, 1, 0))  # Green
-	elif reputation >= 30:
-		reputation_label.add_theme_color_override("font_color", Color(1, 1, 0))  # Yellow
-	else:
-		reputation_label.add_theme_color_override("font_color", Color(1, 0, 0))  # Red
+	
+	Global.emit_signal("changeLabels")
 
 	# Turn counter label stays the same color
 	turn_counter_label.text = "Turn: " + str(current_turn) + "/" + str(MAX_TURNS)
@@ -796,17 +758,17 @@ func _on_events_eventcard(event_index: Variant, event_input: int) -> void:
 			if events_types[event_index]["ok_effects"] == true:
 				events.event_setup(event_index)  # Create the event card
 			else:
-				money += events_types[event_index]["effect"][0]
-				iron += events_types[event_index]["effect"][1]
-				reputation += events_types[event_index]["effect"][2]
-				co2 += events_types[event_index]["effect"][3]
+				Global.money += events_types[event_index]["effect"][0]
+				Global.iron += events_types[event_index]["effect"][1]
+				Global.reputation += events_types[event_index]["effect"][2]
+				Global.co2 += events_types[event_index]["effect"][3]
 				update_all_labels()
 		elif event_input == 0:  # User declined the event
 			if events_types[event_index]["no_effect"] == true:
 				events.event_setup(event_index)
 			else:
-				money += events_types[event_index]["effect"][0]
-				iron += events_types[event_index]["effect"][1]
-				reputation += events_types[event_index]["effect"][2]
-				co2 += events_types[event_index]["effect"][3]
+				Global.money += events_types[event_index]["effect"][0]
+				Global.iron += events_types[event_index]["effect"][1]
+				Global.reputation += events_types[event_index]["effect"][2]
+				Global.co2 += events_types[event_index]["effect"][3]
 				update_all_labels()
