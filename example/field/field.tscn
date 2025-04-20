@@ -14,11 +14,13 @@ script = ExtResource("1_7p7dw")
 metadata/_edit_use_anchors_ = true
 
 [node name="Panel" type="Panel" parent="."]
-modulate = Color(1, 1, 1, 0.278431)
+self_modulate = Color(1, 1, 1, 0)
+show_behind_parent = true
 layout_mode = 2
 script = ExtResource("2_emc5e")
 
 [node name="Label" type="Label" parent="."]
+visible = false
 layout_mode = 2
 text = "destroy
 "

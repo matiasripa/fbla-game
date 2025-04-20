@@ -1,21 +1,27 @@
-[gd_scene load_steps=25 format=3 uid="uid://buh3412b0qtpp"]
+[gd_scene load_steps=35 format=3 uid="uid://buh3412b0qtpp"]
 
 [ext_resource type="PackedScene" uid="uid://biim2lxri0akl" path="res://example/field/field.tscn" id="1_fkhir"]
 [ext_resource type="Script" path="res://example/Signal_bus.gd" id="1_swl7a"]
 [ext_resource type="Script" path="res://example/drawcard.gd" id="3_aopf2"]
+[ext_resource type="Texture2D" uid="uid://dxatd6o1fy41r" path="res://hand.png" id="3_f1oa3"]
 [ext_resource type="Script" path="res://example/end_turn.gd" id="4_d401k"]
 [ext_resource type="Shader" path="res://example/fire.gdshader" id="4_h1m6o"]
 [ext_resource type="Texture2D" uid="uid://kmkudg1ghyt8" path="res://Picsart_25-03-06_20-45-14-524.png" id="5_0btdp"]
 [ext_resource type="PackedScene" uid="uid://b0u4pf74opd1e" path="res://audio_stream_player.tscn" id="5_akeb5"]
 [ext_resource type="FontFile" uid="uid://bkgxbjbkij5j0" path="res://pixel font.ttf" id="5_gcgma"]
+[ext_resource type="Texture2D" uid="uid://4ox3rcpuc7gm" path="res://neg.png" id="5_nvq6e"]
 [ext_resource type="Texture2D" uid="uid://bysw1m0j5l8hf" path="res://example/button.png" id="5_x2hf3"]
 [ext_resource type="Script" path="res://moneyLabel.gd" id="7_jimci"]
 [ext_resource type="Script" path="res://example/quit_button.gd" id="7_oarpl"]
 [ext_resource type="AudioStream" uid="uid://cgqvo8j84gbxs" path="res://example/field/Ian Post - Breaking Point.mp3" id="8_h1occ"]
 [ext_resource type="Script" path="res://co2Label.gd" id="8_x8uvu"]
-[ext_resource type="Texture2D" uid="uid://denlhiu1ak30s" path="res://score.png" id="9_qt5qj"]
+[ext_resource type="Texture2D" uid="uid://ttqyrna7rgre" path="res://score2.png" id="9_t7mki"]
 [ext_resource type="Script" path="res://ironLabel.gd" id="9_td7mb"]
 [ext_resource type="Script" path="res://reputationLabel.gd" id="10_nu0o7"]
+[ext_resource type="Texture2D" uid="uid://y8twu86ria3j" path="res://pos.png" id="16_dfa0p"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ktn6r"]
+texture = ExtResource("3_f1oa3")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3qu4y"]
 shader = ExtResource("4_h1m6o")
@@ -66,6 +72,24 @@ texture_margin_top = 6.0
 texture_margin_right = 6.0
 texture_margin_bottom = 3.0
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8qway"]
+texture = ExtResource("5_x2hf3")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i0vrh"]
+texture = ExtResource("5_x2hf3")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jao4e"]
+texture = ExtResource("5_x2hf3")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_p4wa2"]
+texture = ExtResource("5_x2hf3")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0oxfo"]
+texture = ExtResource("5_x2hf3")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3icpr"]
+texture = ExtResource("5_x2hf3")
+
 [node name="Game" type="Node"]
 
 [node name="Signalbus" type="Node" parent="."]
@@ -81,7 +105,7 @@ expand_mode = 3
 [node name="fade_overlay" type="ColorRect" parent="Signalbus"]
 z_index = 100
 offset_right = 1200.0
-offset_bottom = 700.0
+offset_bottom = 882.0
 color = Color(1, 1, 1, 0)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Signalbus" groups=["fields"]]
@@ -98,7 +122,30 @@ offset_bottom = 17.992
 grow_horizontal = 2
 grow_vertical = 0
 
+[node name="Panel" parent="Signalbus/CanvasLayer/hand" index="0"]
+self_modulate = Color(1, 1, 1, 1)
+theme_override_styles/panel = SubResource("StyleBoxTexture_ktn6r")
+
+[node name="pos" type="TextureRect" parent="Signalbus/CanvasLayer/hand/Panel" index="0"]
+layout_mode = 2
+offset_left = -6.00005
+offset_top = -345.0
+offset_right = 415.0
+offset_bottom = -195.0
+texture = ExtResource("16_dfa0p")
+expand_mode = 1
+
+[node name="neg" type="TextureRect" parent="Signalbus/CanvasLayer/hand/Panel" index="1"]
+layout_mode = 0
+offset_left = -2.0
+offset_top = -177.0
+offset_right = 420.0
+offset_bottom = -26.0
+texture = ExtResource("5_nvq6e")
+expand_mode = 1
+
 [node name="Label" parent="Signalbus/CanvasLayer/hand" index="1"]
+size_flags_horizontal = 4
 text = "hand"
 
 [node name="Assets" parent="Signalbus/CanvasLayer" instance=ExtResource("1_fkhir")]
@@ -192,11 +239,18 @@ anchor_left = 0.583
 anchor_top = 1.0
 anchor_right = 0.583
 anchor_bottom = 1.0
-offset_left = -220.616
-offset_top = -268.0
-offset_right = -136.616
-offset_bottom = -237.0
+offset_left = -231.616
+offset_top = -260.0
+offset_right = -121.616
+offset_bottom = -218.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("5_gcgma")
+theme_override_styles/focus = SubResource("StyleBoxTexture_8qway")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_i0vrh")
+theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_jao4e")
+theme_override_styles/hover = SubResource("StyleBoxTexture_p4wa2")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_0oxfo")
+theme_override_styles/normal = SubResource("StyleBoxTexture_3icpr")
 text = "End turn"
 script = ExtResource("4_d401k")
 
@@ -216,6 +270,7 @@ offset_left = 441.0
 offset_top = 468.0
 offset_right = 599.0
 offset_bottom = 516.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("5_gcgma")
 theme_override_font_sizes/font_size = 18
 text = "Action remaining: 2"
@@ -227,7 +282,6 @@ offset_right = 1143.0
 offset_bottom = 580.0
 
 [node name="TextureRect" type="TextureRect" parent="Signalbus/CanvasLayer/ResourcePanel"]
-modulate = Color(0.724643, 0.724643, 0.724643, 1)
 top_level = true
 layout_mode = 1
 anchors_preset = -1
@@ -235,42 +289,46 @@ anchor_left = 0.802
 anchor_top = 0.605
 anchor_right = 0.999
 anchor_bottom = 0.873
-offset_left = -9.90405
-offset_top = -31.04
-offset_right = 0.151855
+offset_left = -9.90399
+offset_top = -54.04
+offset_right = 0.151978
 offset_bottom = 18.296
-texture = ExtResource("9_qt5qj")
+texture = ExtResource("9_t7mki")
 expand_mode = 1
 
 [node name="MoneyLabel" type="Label" parent="Signalbus/CanvasLayer"]
-offset_left = 966.0
-offset_top = 434.0
-offset_right = 1056.0
-offset_bottom = 457.0
+offset_left = 948.0
+offset_top = 444.0
+offset_right = 1038.0
+offset_bottom = 467.0
+theme_override_fonts/font = ExtResource("5_gcgma")
 text = "Money"
 script = ExtResource("7_jimci")
 
 [node name="CO2Label" type="Label" parent="Signalbus/CanvasLayer"]
-offset_left = 973.0
-offset_top = 460.0
-offset_right = 1063.0
-offset_bottom = 483.0
+offset_left = 950.0
+offset_top = 469.0
+offset_right = 1040.0
+offset_bottom = 492.0
+theme_override_fonts/font = ExtResource("5_gcgma")
 text = "co2"
 script = ExtResource("8_x8uvu")
 
 [node name="IronLabel" type="Label" parent="Signalbus/CanvasLayer"]
-offset_left = 966.0
-offset_top = 490.0
-offset_right = 1056.0
-offset_bottom = 513.0
+offset_left = 951.0
+offset_top = 494.0
+offset_right = 1041.0
+offset_bottom = 517.0
+theme_override_fonts/font = ExtResource("5_gcgma")
 text = "iron "
 script = ExtResource("9_td7mb")
 
 [node name="ReputationLabel" type="Label" parent="Signalbus/CanvasLayer"]
-offset_left = 965.0
-offset_top = 529.0
-offset_right = 1055.0
-offset_bottom = 552.0
+offset_left = 949.0
+offset_top = 518.0
+offset_right = 1060.0
+offset_bottom = 541.0
+theme_override_fonts/font = ExtResource("5_gcgma")
 text = "ReputationLabel"
 script = ExtResource("10_nu0o7")
 
@@ -280,6 +338,7 @@ offset_left = 1016.0
 offset_top = 8.0
 offset_right = 1144.0
 offset_bottom = 31.0
+theme_override_fonts/font = ExtResource("5_gcgma")
 text = "count :"
 
 [node name="QuitButton" type="Button" parent="Signalbus/CanvasLayer"]

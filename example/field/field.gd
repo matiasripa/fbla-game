@@ -61,6 +61,8 @@ func _ready():
 	for child in cards_holder.get_children():
 		var card := child as Card
 		card.home_field = self
+		card.top_level = true
+		card.show_behind_parent = false
 
 # Move card back to its original position
 func return_card_starting_position(card: Card):
