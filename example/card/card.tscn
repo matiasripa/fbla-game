@@ -18,7 +18,7 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_x353h"]
 resource_local_to_scene = true
 shader = ExtResource("1_0tef8")
-shader_parameter/Line_Smoothness = 0.045
+shader_parameter/Line_Smoothness = 0.043
 shader_parameter/Line_Width = 0.084
 shader_parameter/Brightness = 3.0
 shader_parameter/Rotation_deg = 30.0

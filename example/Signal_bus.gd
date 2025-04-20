@@ -279,7 +279,7 @@ func update_draw_button_text():
 		if current_player == 1:
 			draw_cards_button.text = "Draw Card"
 		else:
-			draw_cards_button.text = "Draw 2 Event Cards"
+			draw_cards_button.text = "Draw Event"
 	else:
 		draw_cards_button.text = "Draw Card"
 

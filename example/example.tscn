@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://buh3412b0qtpp"]
+[gd_scene load_steps=25 format=3 uid="uid://buh3412b0qtpp"]
 
 [ext_resource type="PackedScene" uid="uid://biim2lxri0akl" path="res://example/field/field.tscn" id="1_fkhir"]
 [ext_resource type="Script" path="res://example/Signal_bus.gd" id="1_swl7a"]
@@ -7,10 +7,13 @@
 [ext_resource type="Shader" path="res://example/fire.gdshader" id="4_h1m6o"]
 [ext_resource type="Texture2D" uid="uid://kmkudg1ghyt8" path="res://Picsart_25-03-06_20-45-14-524.png" id="5_0btdp"]
 [ext_resource type="PackedScene" uid="uid://b0u4pf74opd1e" path="res://audio_stream_player.tscn" id="5_akeb5"]
+[ext_resource type="FontFile" uid="uid://bkgxbjbkij5j0" path="res://pixel font.ttf" id="5_gcgma"]
+[ext_resource type="Texture2D" uid="uid://bysw1m0j5l8hf" path="res://example/button.png" id="5_x2hf3"]
 [ext_resource type="Script" path="res://moneyLabel.gd" id="7_jimci"]
 [ext_resource type="Script" path="res://example/quit_button.gd" id="7_oarpl"]
 [ext_resource type="AudioStream" uid="uid://cgqvo8j84gbxs" path="res://example/field/Ian Post - Breaking Point.mp3" id="8_h1occ"]
 [ext_resource type="Script" path="res://co2Label.gd" id="8_x8uvu"]
+[ext_resource type="Texture2D" uid="uid://denlhiu1ak30s" path="res://score.png" id="9_qt5qj"]
 [ext_resource type="Script" path="res://ironLabel.gd" id="9_td7mb"]
 [ext_resource type="Script" path="res://reputationLabel.gd" id="10_nu0o7"]
 
@@ -20,6 +23,48 @@ shader_parameter/fireMovement = Vector2(0.01, -0.05)
 shader_parameter/distortionMovement = Vector2(-0.01, -0.03)
 shader_parameter/normalStrength = 10.0
 shader_parameter/distortionStrength = 0.001
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_b4evi"]
+texture = ExtResource("5_x2hf3")
+texture_margin_top = 6.0
+texture_margin_right = 6.0
+texture_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dwfq8"]
+texture = ExtResource("5_x2hf3")
+texture_margin_top = 6.0
+texture_margin_right = 6.0
+texture_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lk2wn"]
+texture = ExtResource("5_x2hf3")
+expand_margin_top = 6.0
+expand_margin_right = 6.0
+expand_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_s2b6f"]
+texture = ExtResource("5_x2hf3")
+texture_margin_top = 6.0
+texture_margin_right = 6.0
+texture_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2csv5"]
+texture = ExtResource("5_x2hf3")
+texture_margin_top = 6.0
+texture_margin_right = 6.0
+texture_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sh1sn"]
+texture = ExtResource("5_x2hf3")
+texture_margin_top = 6.0
+texture_margin_right = 6.0
+texture_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1gt6n"]
+texture = ExtResource("5_x2hf3")
+texture_margin_top = 6.0
+texture_margin_right = 6.0
+texture_margin_bottom = 3.0
 
 [node name="Game" type="Node"]
 
@@ -122,11 +167,23 @@ anchor_left = 0.597
 anchor_top = 1.0
 anchor_right = 0.601
 anchor_bottom = 1.0
-offset_left = -238.744
-offset_top = -231.0
-offset_right = -155.352
-offset_bottom = -200.0
+offset_left = -249.744
+offset_top = -220.0
+offset_right = -131.352
+offset_bottom = -173.0
+theme_override_colors/font_color = Color(0.0784314, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5_gcgma")
+theme_override_font_sizes/font_size = 18
+theme_override_styles/focus = SubResource("StyleBoxTexture_b4evi")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_dwfq8")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxTexture_lk2wn")
+theme_override_styles/hover = SubResource("StyleBoxTexture_s2b6f")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_2csv5")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxTexture_sh1sn")
+theme_override_styles/normal = SubResource("StyleBoxTexture_1gt6n")
 text = "Draw card"
+icon_alignment = 1
+expand_icon = true
 script = ExtResource("3_aopf2")
 
 [node name="end turn" type="Button" parent="Signalbus/CanvasLayer"]
@@ -139,6 +196,7 @@ offset_left = -220.616
 offset_top = -268.0
 offset_right = -136.616
 offset_bottom = -237.0
+theme_override_fonts/font = ExtResource("5_gcgma")
 text = "End turn"
 script = ExtResource("4_d401k")
 
@@ -154,29 +212,41 @@ offset_bottom = 148.264
 isevent = true
 
 [node name="ActionLabel" type="Label" parent="Signalbus/CanvasLayer"]
-offset_left = 434.0
-offset_top = 450.0
-offset_right = 592.0
-offset_bottom = 498.0
+offset_left = 441.0
+offset_top = 468.0
+offset_right = 599.0
+offset_bottom = 516.0
+theme_override_fonts/font = ExtResource("5_gcgma")
+theme_override_font_sizes/font_size = 18
 text = "Action remaining: 2"
 
 [node name="ResourcePanel" type="Panel" parent="Signalbus/CanvasLayer"]
-offset_left = 958.0
-offset_top = 408.0
-offset_right = 1122.0
+offset_left = 921.0
+offset_top = 386.0
+offset_right = 1143.0
 offset_bottom = 580.0
 
 [node name="TextureRect" type="TextureRect" parent="Signalbus/CanvasLayer/ResourcePanel"]
-layout_mode = 0
-offset_left = 60.0
-offset_right = 231.0
-offset_bottom = 169.0
+modulate = Color(0.724643, 0.724643, 0.724643, 1)
+top_level = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.802
+anchor_top = 0.605
+anchor_right = 0.999
+anchor_bottom = 0.873
+offset_left = -9.90405
+offset_top = -31.04
+offset_right = 0.151855
+offset_bottom = 18.296
+texture = ExtResource("9_qt5qj")
+expand_mode = 1
 
 [node name="MoneyLabel" type="Label" parent="Signalbus/CanvasLayer"]
-offset_left = 970.0
-offset_top = 411.0
-offset_right = 1060.0
-offset_bottom = 434.0
+offset_left = 966.0
+offset_top = 434.0
+offset_right = 1056.0
+offset_bottom = 457.0
 text = "Money"
 script = ExtResource("7_jimci")
 
@@ -189,10 +259,10 @@ text = "co2"
 script = ExtResource("8_x8uvu")
 
 [node name="IronLabel" type="Label" parent="Signalbus/CanvasLayer"]
-offset_left = 980.0
-offset_top = 494.0
-offset_right = 1070.0
-offset_bottom = 517.0
+offset_left = 966.0
+offset_top = 490.0
+offset_right = 1056.0
+offset_bottom = 513.0
 text = "iron "
 script = ExtResource("9_td7mb")
 
