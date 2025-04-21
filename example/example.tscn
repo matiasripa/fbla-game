@@ -121,15 +121,13 @@ texture = ExtResource("5_x2hf3")
 script = ExtResource("1_swl7a")
 
 [node name="background2" type="TextureRect" parent="Signalbus"]
-modulate = Color(0.967468, 0.964603, 0.982375, 0.247059)
-self_modulate = Color(1, 1, 1, 0)
 top_level = true
 material = SubResource("ShaderMaterial_y6g0a")
 use_parent_material = true
-offset_left = -677.0
-offset_top = 1.0
-offset_right = 1145.3
-offset_bottom = 579.0
+offset_left = -670.0
+offset_top = 3.0
+offset_right = 1152.0
+offset_bottom = 628.0
 texture = ExtResource("5_x2hf3")
 expand_mode = 3
 
@@ -138,16 +136,17 @@ modulate = Color(1, 1, 1, 0.815686)
 self_modulate = Color(1, 1, 1, 0.811765)
 show_behind_parent = true
 use_parent_material = true
-offset_top = -3.0
+offset_top = -4.0
 offset_right = 1149.0
-offset_bottom = 650.0
+offset_bottom = 649.0
 texture = ExtResource("5_md78k")
 expand_mode = 1
 
 [node name="fade_overlay" type="ColorRect" parent="Signalbus"]
 z_index = 100
+offset_top = -1.0
 offset_right = 1163.0
-offset_bottom = 651.0
+offset_bottom = 650.0
 color = Color(1, 1, 1, 0)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Signalbus" groups=["fields"]]
@@ -245,9 +244,9 @@ anchor_left = 0.778212
 anchor_top = 0.519444
 anchor_right = 0.778212
 anchor_bottom = 0.519444
-offset_left = -266.5
+offset_left = -298.5
 offset_top = -316.6
-offset_right = 154.5
+offset_right = 122.5
 offset_bottom = -166.6
 grow_horizontal = 2
 grow_vertical = 0
