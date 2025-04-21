@@ -1,13 +1,16 @@
-[gd_scene load_steps=42 format=3 uid="uid://buh3412b0qtpp"]
+[gd_scene load_steps=46 format=3 uid="uid://buh3412b0qtpp"]
 
 [ext_resource type="PackedScene" uid="uid://biim2lxri0akl" path="res://example/field/field.tscn" id="1_fkhir"]
 [ext_resource type="Script" path="res://example/Signal_bus.gd" id="1_swl7a"]
+[ext_resource type="Shader" path="res://example/bb.gdshader" id="2_jr1l4"]
 [ext_resource type="Script" path="res://example/drawcard.gd" id="3_aopf2"]
 [ext_resource type="Texture2D" uid="uid://dxatd6o1fy41r" path="res://hand.png" id="3_f1oa3"]
+[ext_resource type="Texture2D" uid="uid://d21i6ha35ibdw" path="res://These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="4_8giam"]
 [ext_resource type="Script" path="res://example/end_turn.gd" id="4_d401k"]
 [ext_resource type="Shader" path="res://example/fire.gdshader" id="4_h1m6o"]
 [ext_resource type="PackedScene" uid="uid://b0u4pf74opd1e" path="res://audio_stream_player.tscn" id="5_akeb5"]
 [ext_resource type="FontFile" uid="uid://bkgxbjbkij5j0" path="res://pixel font.ttf" id="5_gcgma"]
+[ext_resource type="Texture2D" uid="uid://dex1ty3lrelu" path="res://factory/fact1.png" id="5_md78k"]
 [ext_resource type="Texture2D" uid="uid://4ox3rcpuc7gm" path="res://neg.png" id="5_nvq6e"]
 [ext_resource type="Texture2D" uid="uid://bysw1m0j5l8hf" path="res://example/button.png" id="5_x2hf3"]
 [ext_resource type="Texture2D" uid="uid://bg10y0esf2eo6" path="res://fire border.png" id="6_miwer"]
@@ -21,6 +24,11 @@
 [ext_resource type="Script" path="res://reputationLabel.gd" id="10_nu0o7"]
 [ext_resource type="Texture2D" uid="uid://y8twu86ria3j" path="res://pos.png" id="16_dfa0p"]
 [ext_resource type="AudioStream" uid="uid://b25giniq3j62d" path="res://example/Retro9.mp3" id="20_dy770"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y6g0a"]
+shader = ExtResource("2_jr1l4")
+shader_parameter/perlin_noise = ExtResource("4_8giam")
+shader_parameter/cell_noise = ExtResource("4_8giam")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ktn6r"]
 texture = ExtResource("3_f1oa3")
@@ -112,12 +120,29 @@ texture = ExtResource("5_x2hf3")
 [node name="Signalbus" type="Node" parent="."]
 script = ExtResource("1_swl7a")
 
+[node name="background2" type="TextureRect" parent="Signalbus"]
+modulate = Color(0.967468, 0.964603, 0.982375, 0.247059)
+self_modulate = Color(1, 1, 1, 0)
+top_level = true
+material = SubResource("ShaderMaterial_y6g0a")
+use_parent_material = true
+offset_left = -677.0
+offset_top = 1.0
+offset_right = 1145.3
+offset_bottom = 579.0
+texture = ExtResource("5_x2hf3")
+expand_mode = 3
+
 [node name="background" type="TextureRect" parent="Signalbus"]
+modulate = Color(1, 1, 1, 0.815686)
+self_modulate = Color(1, 1, 1, 0.811765)
 show_behind_parent = true
+use_parent_material = true
 offset_top = -3.0
 offset_right = 1149.0
 offset_bottom = 650.0
-expand_mode = 3
+texture = ExtResource("5_md78k")
+expand_mode = 1
 
 [node name="fade_overlay" type="ColorRect" parent="Signalbus"]
 z_index = 100

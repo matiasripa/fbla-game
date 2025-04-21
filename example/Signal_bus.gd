@@ -257,7 +257,6 @@ func _confirm_singleplayer():
 	# Set initial background
 	background.texture = factory_textures[0]
 	print("Singleplayer mode selected")
-
 # In _on_draw_cards_pressed, make sure we handle the button disabling logic
 func _on_draw_cards_pressed():
 	if !multiplay:
