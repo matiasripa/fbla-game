@@ -34,4 +34,5 @@ func _update_button_state() -> void:
 # Handle button press
 func _on_pressed() -> void:
 	if not disabled:
+		$"../../AudioStreamPlayer2".play()
 		endturn.emit()  # Emit end turn signal

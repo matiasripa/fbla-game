@@ -34,12 +34,15 @@ func _process(delta):
 
 func handle_selection(_current_selection):
 	if _current_selection == 0:
+		$AudioStreamPlayer2D.play()
 		get_parent().add_child(example_scene.instantiate())  # Use instantiate() for Godot 4.x
 		queue_free()
 	elif _current_selection == 1:
 		# Show How to Play popup
 		popup.popup_centered()
+		$AudioStreamPlayer2D.play()
 	elif _current_selection == 2:
+		$AudioStreamPlayer2D.play()
 		get_tree().quit()
 
 func set_current_selection(_current_selection):
@@ -55,4 +58,6 @@ func set_current_selection(_current_selection):
 		selector_four.text = ">"
 
 func _on_close_button_pressed():
+	$AudioStreamPlayer2D.play()
 	popup.hide()
+	

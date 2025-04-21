@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://7tu2lm4sjgld"]
+[gd_scene load_steps=5 format=3 uid="uid://7tu2lm4sjgld"]
 
 [ext_resource type="Script" path="res://MainMenu.gd" id="2"]
 [ext_resource type="FontFile" uid="uid://bkgxbjbkij5j0" path="res://pixel font.ttf" id="2_hb4uw"]
 [ext_resource type="Texture2D" uid="uid://ctnl4kyre35yr" path="res://start menu .jpg" id="2_uwfjq"]
+[ext_resource type="AudioStream" uid="uid://b25giniq3j62d" path="res://example/Retro9.mp3" id="4_aeria"]
 
 [node name="MainMenu" type="MarginContainer"]
 anchors_preset = 15
@@ -134,3 +135,7 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("2_hb4uw")
 theme_override_font_sizes/font_size = 20
 text = "Close"
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_aeria")
+volume_db = 24.0

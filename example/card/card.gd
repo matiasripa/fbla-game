@@ -124,7 +124,7 @@ var card_textures = {
 var zoom_card: Control = null
 var zoom_active: bool = false
 var zoom_scale: float = 2.5
-var zoom_position: Vector2 = Vector2(800, 100)  # Position on right side of screen
+var zoom_position: Vector2 = Vector2(800, 180)  # Position on right side of screen
 
 
 
