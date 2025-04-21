@@ -454,7 +454,9 @@ func _on_mouse_entered():
 	if home_field:
 		# Show zoom card for hand, Events, and now EventField fields, but not in Drag state
 		if (home_field.name == "hand" || home_field.name == "Events" || home_field.name == "EventField" || home_field.name == "Assets" || home_field.name == "Withdraw") and state_machine.current_state.name != "Drag":
+			$AudioStreamPlayer.play()
 			create_zoom_card()
+			
 		
 		# Different hover effects based on field type
 		if !home_field.iswithdraw and !home_field.isasset and !home_field.isevent:
@@ -471,7 +473,7 @@ func _on_mouse_entered():
 				tween_hover = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 				tween_hover.tween_property(self, "scale", Vector2(1.2, 1.1), 0.2)
 				
-				$AudioStreamPlayer2D.play()
+				
 		# For withdraw field, only show minimal hover effect for right-click functionality
 		elif home_field.iswithdraw:
 			state_machine.on_mouse_entered()
@@ -479,7 +481,6 @@ func _on_mouse_entered():
 func _on_mouse_exited():
 	# Remove zoom card when mouse exits the card
 	remove_zoom_card()
-	
 	state_machine.on_mouse_exited()
 	
 	# Only hide shadow if it was previously shown
